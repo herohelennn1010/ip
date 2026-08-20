@@ -24,6 +24,7 @@ public class Sophon {
         String bye = "Our conversation ends here.\n"
                 + "Until we meet again.";
         String[] tasks = new String[100];
+        boolean[] isDone = new boolean[100];
         int taskCount = 0;
 
         Scanner scanner = new Scanner(System.in);
@@ -44,9 +45,17 @@ public class Sophon {
             }
 
             if (input.equals("list")) {
+                System.out.println(indent + "Current tasks under observation:");
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println(indent + (i + 1) + ". " + tasks[i]);
+                    String status = isDone[i] ? "[X]" : "[ ]";
+                    System.out.println(indent + (i + 1) + "." + status + " " + tasks[i]);
                 }
+            } else if (input.startsWith("mark ")) {
+                int taskNumber = Integer.parseInt(input.substring(5));
+                int taskIndex = taskNumber - 1;
+                isDone[taskIndex] = true;
+                System.out.println(indent + "Acknowledged. This task is now complete:");
+                System.out.println(indent + "  [X] " + tasks[taskIndex]);
             } else {
                 tasks[taskCount] = input;
                 taskCount++;
