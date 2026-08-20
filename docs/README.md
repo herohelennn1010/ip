@@ -1,17 +1,33 @@
 # Sophon User Guide
 
-Sophon is a command-line chatbot that reads commands typed by the user.
+Sophon is a command-line chatbot that stores tasks typed by the user and lists
+them when requested.
 
-## Echoing Commands
+## Adding Tasks
 
-Type any command and press Enter. Sophon will echo the same command back to you.
+Type a task and press Enter. Sophon stores the task in memory for the current
+session.
+
+Example:
+
+```text
+read book
+    ____________________________________________________________
+     added: read book
+    ____________________________________________________________
+```
+
+## Listing Tasks
+
+Type `list` and press Enter to view the tasks added so far.
 
 Example:
 
 ```text
 list
     ____________________________________________________________
-     list
+     1. read book
+     2. return book
     ____________________________________________________________
 ```
 

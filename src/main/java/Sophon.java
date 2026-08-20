@@ -1,13 +1,16 @@
+import java.util.Scanner;
+
 /**
  * Entry point for the Sophon chatbot.
  */
 public class Sophon {
     /**
-     * Prints the chatbot banner.
+     * Starts the chatbot and handles user commands until the user exits.
      *
      * @param args command line arguments, currently unused
      */
     public static void main(String[] args) {
+        String indent = "     ";
         String line = "____________________________________________________________";
         String banner = " ____              _                 \n"
                 + "/ ___|  ___  _ __ | |__   ___  _ __ \n"
@@ -16,14 +19,40 @@ public class Sophon {
                 + "|____/ \\___/| .__/|_| |_|\\___/|_| |_|\n"
                 + "            |_|                       \n";
         String greeting = "你好! I'm Sophon.\n"
-                + "I'm listening.";
+                + "I'm listening.\n"
+                + "What do you wish to communicate?";
         String bye = "Our conversation ends here.\n"
                 + "Until we meet again.";
+        String[] tasks = new String[100];
+        int taskCount = 0;
+
+        Scanner scanner = new Scanner(System.in);
+
         System.out.println(line);
         System.out.print(banner);
-        System.out.println(greeting);
+        System.out.println(indent + greeting.replace("\n", "\n" + indent));
         System.out.println(line);
-        System.out.println(bye);
-        System.out.println(line);
+        while (true) {
+            String input = scanner.nextLine();
+
+            System.out.println(line);
+
+            if (input.equals("bye")) {
+                System.out.println(indent + bye.replace("\n","\n" + indent));
+                System.out.println(line);
+                break;
+            }
+
+            if (input.equals("list")) {
+                for (int i = 0; i < taskCount; i++) {
+                    System.out.println(indent + (i + 1) + ". " + tasks[i]);
+                }
+            } else {
+                tasks[taskCount] = input;
+                taskCount++;
+                System.out.println(indent + "added: " + input);
+            }
+            System.out.println(line);
+        }
     }
 }
