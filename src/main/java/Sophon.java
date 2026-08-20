@@ -134,6 +134,28 @@ public class Sophon {
                     tasks.get(taskIndex).markAsNotDone();
                     System.out.println(indent + "Reverted. This task is once again incomplete:");
                     System.out.println(indent + "  " + tasks.get(taskIndex));
+                } else if (input.equals("delete") || input.startsWith("delete ")) {
+                    String taskNumberText = input.length() == 6 ? "" : input.substring(7).trim();
+                    if (taskNumberText.isBlank()) {
+                        throw new SophonException("Tell me which task to remove.");
+                    }
+
+                    int taskNumber;
+                    try {
+                        taskNumber = Integer.parseInt(taskNumberText);
+                    } catch (NumberFormatException e) {
+                        throw new SophonException("Task numbers must be written as numerals.");
+                    }
+
+                    int taskIndex = taskNumber - 1;
+                    if (taskIndex < 0 || taskIndex >= tasks.size()) {
+                        throw new SophonException("No task exists at that number.");
+                    }
+
+                    Task removedTask = tasks.remove(taskIndex);
+                    System.out.println(indent + "Removed. This task is no longer under observation:");
+                    System.out.println(indent + "  " + removedTask);
+                    System.out.println(indent + tasks.size() + " tasks remain under observation.");
                 } else {
                     System.out.println(indent + "Your message has been observed.\n"
                             + indent + "Its meaning, however, remains unknown.");

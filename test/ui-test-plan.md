@@ -215,3 +215,79 @@ ____________________________________________________________
      Until we meet again.
 ____________________________________________________________
 ```
+
+### TC-04: Delete tasks and handle invalid delete commands
+
+Aim: Verify that Sophon removes the requested task, keeps the remaining tasks listed correctly, and explains invalid delete commands.
+
+Command:
+```text
+java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -cp out\ui-test Sophon
+```
+
+Inputs:
+```text
+delete
+delete abc
+delete 1
+todo read book
+todo borrow book
+delete 0
+delete 3
+delete 1
+list
+bye
+```
+
+Expected output:
+```text
+____________________________________________________________
+ ____              _
+/ ___|  ___  _ __ | |__   ___  _ __
+\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
+ ___) | (_) | |_) | | | | (_) | | | |
+|____/ \___/| .__/|_| |_|\___/|_| |_|
+            |_|
+     你好! I'm Sophon.
+     I'm listening.
+     What do you wish to communicate?
+____________________________________________________________
+____________________________________________________________
+     Tell me which task to remove.
+____________________________________________________________
+____________________________________________________________
+     Task numbers must be written as numerals.
+____________________________________________________________
+____________________________________________________________
+     No task exists at that number.
+____________________________________________________________
+____________________________________________________________
+     Recorded. A new task has entered observation:
+       [T][ ] read book
+     1 tasks are currently under observation.
+____________________________________________________________
+____________________________________________________________
+     Recorded. A new task has entered observation:
+       [T][ ] borrow book
+     2 tasks are currently under observation.
+____________________________________________________________
+____________________________________________________________
+     No task exists at that number.
+____________________________________________________________
+____________________________________________________________
+     No task exists at that number.
+____________________________________________________________
+____________________________________________________________
+     Removed. This task is no longer under observation:
+       [T][ ] read book
+     1 tasks remain under observation.
+____________________________________________________________
+____________________________________________________________
+     Current tasks under observation:
+     1.[T][ ] borrow book
+____________________________________________________________
+____________________________________________________________
+     Our conversation ends here.
+     Until we meet again.
+____________________________________________________________
+```
