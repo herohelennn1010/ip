@@ -99,7 +99,7 @@ ____________________________________________________________
 
 ### TC-03: Handle malformed task commands and plain tasks
 
-Aim: Verify that Sophon does not crash on malformed typed commands and records plain input as a normal task.
+Aim: Verify that Sophon does not crash on malformed typed commands, rejects todos without descriptions, and records plain input as a normal task.
 
 Command:
 ```text
@@ -108,6 +108,7 @@ java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF
 
 Inputs:
 ```text
+todo
 todo 
 deadline return book
 event project meeting /from Mon 2pm
@@ -130,7 +131,12 @@ ____________________________________________________________
      What do you wish to communicate?
 ____________________________________________________________
 ____________________________________________________________
-     Todo format: todo DESCRIPTION
+     You have given me nothing to observe.
+     A todo requires a description.
+____________________________________________________________
+____________________________________________________________
+     You have given me nothing to observe.
+     A todo requires a description.
 ____________________________________________________________
 ____________________________________________________________
      Deadline format: deadline DESCRIPTION /by WHEN
