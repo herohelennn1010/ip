@@ -4,14 +4,17 @@
 public class Task {
     protected String description;
     protected boolean isDone;
+    private final TaskType type;
 
     /**
      * Creates a task with the given description.
      *
      * @param description details of the task
+     * @param type type of task being tracked
      */
-    public Task(String description) {
+    public Task(String description, TaskType type) {
         this.description = description;
+        this.type = type;
         this.isDone = false;
     }
 
@@ -45,6 +48,6 @@ public class Task {
      */
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        return "[" + type.getIcon() + "][" + getStatusIcon() + "] " + description;
     }
 }

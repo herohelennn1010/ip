@@ -14,13 +14,13 @@ public class Event extends Task {
      * @param toWhen when the event ends
      */
     public Event(String description, String fromWhen, String toWhen) {
-        super(description);
+        super(description, TaskType.EVENT);
         this.fromWhen = fromWhen;
         this.toWhen = toWhen;
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + fromWhen + " to: " + toWhen + ")";
+        return super.toString() + " (from: " + fromWhen + " to: " + toWhen + ")";
     }
 }
