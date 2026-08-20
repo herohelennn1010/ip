@@ -1,7 +1,7 @@
 # Sophon User Guide
 
 Sophon is a command-line chatbot that stores tasks typed by the user, marks
-them as done, and lists them when requested.
+or unmarks them, and lists them when requested.
 
 ## Adding Tasks
 
@@ -34,7 +34,8 @@ list
 
 ## Marking Tasks
 
-Type `mark` followed by a task number to mark that task as done.
+Type `mark` followed by a task number to mark that task as done. Type `unmark`
+followed by a task number to mark it as not done.
 
 Example:
 
@@ -43,6 +44,16 @@ mark 2
     ____________________________________________________________
      Acknowledged. This task is now complete:
        [X] return book
+    ____________________________________________________________
+```
+
+Example:
+
+```text
+unmark 2
+    ____________________________________________________________
+     Acknowledged. This task is now incomplete:
+       [ ] return book
     ____________________________________________________________
 ```
 

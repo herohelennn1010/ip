@@ -56,6 +56,12 @@ public class Sophon {
                 isDone[taskIndex] = true;
                 System.out.println(indent + "Acknowledged. This task is now complete:");
                 System.out.println(indent + "  [X] " + tasks[taskIndex]);
+            } else if (input.startsWith("unmark ")) {
+                int taskNumber = Integer.parseInt(input.substring(7));
+                int taskIndex = taskNumber - 1;
+                isDone[taskIndex] = false;
+                System.out.println(indent + "Reverted. This task is once again incomplete:");
+                System.out.println(indent + "  [ ] " + tasks[taskIndex]);
             } else {
                 tasks[taskCount] = input;
                 taskCount++;
