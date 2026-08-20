@@ -1,30 +1,20 @@
 # Sophon User Guide
 
-// Update the title above to match the actual product name
+Sophon is a command-line chatbot that reads commands typed by the user.
 
-// Product screenshot goes here
+## Echoing Commands
 
-// Product intro goes here
+Type any command and press Enter. Sophon will echo the same command back to you.
 
-## Adding deadlines
+Example:
 
-// Describe the action and its outcome.
-
-// Give examples of usage
-
-Example: `keyword (optional arguments)`
-
-// A description of the expected outcome goes here
-
-```
-expected output
+```text
+list
+    ____________________________________________________________
+     list
+    ____________________________________________________________
 ```
 
-## Feature ABC
+## Exiting
 
-// Feature details
-
-
-## Feature XYZ
-
-// Feature details
+Type `bye` and press Enter to end the conversation.
