@@ -99,7 +99,7 @@ ____________________________________________________________
 
 ### TC-03: Handle malformed task commands and plain tasks
 
-Aim: Verify that Sophon does not crash on malformed typed commands, rejects todos, deadlines, and events with missing fields, and records plain input as a normal task.
+Aim: Verify that Sophon does not crash on malformed typed commands, rejects tasks with missing fields, and explains unknown commands.
 
 Command:
 ```text
@@ -203,12 +203,12 @@ ____________________________________________________________
      Tell me when it begins.
 ____________________________________________________________
 ____________________________________________________________
-     added: read book
+     Your message has been observed.
+     Its meaning, however, remains unknown.
 ____________________________________________________________
 ____________________________________________________________
      Current tasks under observation:
      1.[D][ ] return book (by: Sunday)
-     2.[ ] read book
 ____________________________________________________________
 ____________________________________________________________
      Our conversation ends here.

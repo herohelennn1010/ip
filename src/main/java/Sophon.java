@@ -138,9 +138,8 @@ public class Sophon {
                     System.out.println(indent + "Reverted. This task is once again incomplete:");
                     System.out.println(indent + "  " + tasks[taskIndex]);
                 } else {
-                    tasks[taskCount] = new Task(input);
-                    taskCount++;
-                    System.out.println(indent + "added: " + input);
+                    System.out.println(indent + "Your message has been observed.\n"
+                            + indent + "Its meaning, however, remains unknown.");
                 }
             } catch (SophonException e) {
                 System.out.println(indent + e.getMessage().replace("\n", "\n" + indent));
