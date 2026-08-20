@@ -15,6 +15,7 @@ Related source: https://nus-cs2103-ay2627-s1.github.io/website/admin/ip-grading.
 - It is fine to stay slightly ahead, but not more than one week ahead of the schedule unless the user explicitly decides otherwise.
 - Use Java 25 for running and checking the project.
 - Keep code in `[project root]/src`; grading scripts look there.
+- After each code update, update `test/ui-test-plan.md` if the console behavior or relevant test coverage changed, then invoke the project-specific `test-ui` skill and report the test-session record.
 - Do not commit or push unless the user explicitly asks.
 
 ## Week 2 Tasks
@@ -96,5 +97,6 @@ Documentation, 3 marks:
 - Keep code neat and avoid speculative abstractions.
 - Use exceptions for meaningful error handling once the project reaches error-handling increments.
 - Add or update focused JUnit tests when behavior becomes nontrivial.
+- After changing code, check whether `test/ui-test-plan.md` needs corresponding updates, then run the project-specific `test-ui` skill before finishing.
 - Preserve grading-script-sensitive conventions: repo name `ip`, branch `master`, source path `src`, exact increment tag names.
 - Check this guide against the official course pages whenever the user asks about a new week or grading-related change.

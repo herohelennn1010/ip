@@ -36,6 +36,10 @@ Do not update the project-root `README.md` for chatbot feature or user-guide cha
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
 
+## UI testing:
+
+After each code update, check whether `test/ui-test-plan.md` needs to be updated to cover the changed console behavior. Then invoke the project-specific `test-ui` skill and include the resulting test-session record in the response, especially any actual-vs-expected output if a test fails.
+
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
