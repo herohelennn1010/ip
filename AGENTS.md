@@ -28,6 +28,10 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 Before helping with implementation, project management, documentation, or grading-related work, read `.codex/ip-requirements.md` and follow it as the living course checklist. Update that file when the official iP weekly or grading pages change.
 
+## Documentation:
+
+Do not update the project-root `README.md` for chatbot feature or user-guide changes. That file is the assignment/setup README. Put product usage documentation in `docs/README.md` instead.
+
 ## Java version:
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
