@@ -48,6 +48,55 @@ public class Sophon {
                 for (int i = 0; i < taskCount; i++) {
                     System.out.println(indent + (i + 1) + "." + tasks[i]);
                 }
+            } else if (input.startsWith("todo ")) {
+                String description = input.substring(5);
+                if (description.isBlank()) {
+                    System.out.println(indent + "Todo format: todo DESCRIPTION");
+                    System.out.println(line);
+                    continue;
+                }
+                Todo todo = new Todo(description);
+                tasks[taskCount] = todo;
+                taskCount++;
+                System.out.println(indent + "Recorded. A new task has entered observation:");
+                System.out.println(indent + "  " + todo);
+                System.out.println(indent + taskCount + " tasks are currently under observation.");
+            } else if (input.startsWith("deadline ")) {
+                int byIndex = input.indexOf(" /by ");
+                if (byIndex == -1 || input.substring(9, byIndex).isBlank()
+                        || input.substring(byIndex + 5).isBlank()) {
+                    System.out.println(indent + "Deadline format: deadline DESCRIPTION /by WHEN");
+                    System.out.println(line);
+                    continue;
+                }
+                String description = input.substring(9, byIndex);
+                String by = input.substring(byIndex + 5);
+                Deadline deadline = new Deadline(description, by);
+                tasks[taskCount] = deadline;
+                taskCount++;
+                System.out.println(indent + "Recorded. A new deadline has entered observation:");
+                System.out.println(indent + "  " + deadline);
+                System.out.println(indent + taskCount + " tasks are currently under observation.");
+            } else if (input.startsWith("event ")) {
+                int fromIndex = input.indexOf(" /from ");
+                int toIndex = input.indexOf(" /to ");
+                if (fromIndex == -1 || toIndex == -1 || toIndex < fromIndex
+                        || input.substring(6, fromIndex).isBlank()
+                        || input.substring(fromIndex + 7, toIndex).isBlank()
+                        || input.substring(toIndex + 5).isBlank()) {
+                    System.out.println(indent + "Event format: event DESCRIPTION /from START /to END");
+                    System.out.println(line);
+                    continue;
+                }
+                String description = input.substring(6, fromIndex);
+                String from = input.substring(fromIndex + 7, toIndex);
+                String to = input.substring(toIndex + 5);
+                Event event = new Event(description, from, to);
+                tasks[taskCount] = event;
+                taskCount++;
+                System.out.println(indent + "Recorded. A new event has entered observation:");
+                System.out.println(indent + "  " + event);
+                System.out.println(indent + taskCount + " tasks are currently under observation.");
             } else if (input.startsWith("mark ")) {
                 int taskNumber = Integer.parseInt(input.substring(5));
                 int taskIndex = taskNumber - 1;

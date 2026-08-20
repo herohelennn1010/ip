@@ -39,9 +39,9 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
-### TC-02: Add and list a task
+### TC-02: Add and list todos, deadlines, and events
 
-Aim: Verify that Sophon records a task and displays it in the task list.
+Aim: Verify that Sophon records all three task types and displays them in the task list.
 
 Command:
 ```text
@@ -50,6 +50,67 @@ java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF
 
 Inputs:
 ```text
+todo read book
+deadline return book /by Sunday
+event project meeting /from Mon 2pm /to 4pm
+list
+bye
+```
+
+Expected output:
+```text
+____________________________________________________________
+ ____              _
+/ ___|  ___  _ __ | |__   ___  _ __
+\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
+ ___) | (_) | |_) | | | | (_) | | | |
+|____/ \___/| .__/|_| |_|\___/|_| |_|
+            |_|
+     你好! I'm Sophon.
+     I'm listening.
+     What do you wish to communicate?
+____________________________________________________________
+____________________________________________________________
+     Recorded. A new task has entered observation:
+       [T][ ] read book
+     1 tasks are currently under observation.
+____________________________________________________________
+____________________________________________________________
+     Recorded. A new deadline has entered observation:
+       [D][ ] return book (by: Sunday)
+     2 tasks are currently under observation.
+____________________________________________________________
+____________________________________________________________
+     Recorded. A new event has entered observation:
+       [E][ ] project meeting (from: Mon 2pm to: 4pm)
+     3 tasks are currently under observation.
+____________________________________________________________
+____________________________________________________________
+     Current tasks under observation:
+     1.[T][ ] read book
+     2.[D][ ] return book (by: Sunday)
+     3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+____________________________________________________________
+____________________________________________________________
+     Our conversation ends here.
+     Until we meet again.
+____________________________________________________________
+```
+
+### TC-03: Handle malformed task commands and plain tasks
+
+Aim: Verify that Sophon does not crash on malformed typed commands and records plain input as a normal task.
+
+Command:
+```text
+java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -cp out\ui-test Sophon
+```
+
+Inputs:
+```text
+todo 
+deadline return book
+event project meeting /from Mon 2pm
 read book
 list
 bye
@@ -67,6 +128,15 @@ ____________________________________________________________
      你好! I'm Sophon.
      I'm listening.
      What do you wish to communicate?
+____________________________________________________________
+____________________________________________________________
+     Todo format: todo DESCRIPTION
+____________________________________________________________
+____________________________________________________________
+     Deadline format: deadline DESCRIPTION /by WHEN
+____________________________________________________________
+____________________________________________________________
+     Event format: event DESCRIPTION /from START /to END
 ____________________________________________________________
 ____________________________________________________________
      added: read book
