@@ -23,8 +23,7 @@ public class Sophon {
                 + "What do you wish to communicate?";
         String bye = "Our conversation ends here.\n"
                 + "Until we meet again.";
-        String[] tasks = new String[100];
-        boolean[] isDone = new boolean[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
 
         Scanner scanner = new Scanner(System.in);
@@ -47,23 +46,22 @@ public class Sophon {
             if (input.equals("list")) {
                 System.out.println(indent + "Current tasks under observation:");
                 for (int i = 0; i < taskCount; i++) {
-                    String status = isDone[i] ? "[X]" : "[ ]";
-                    System.out.println(indent + (i + 1) + "." + status + " " + tasks[i]);
+                    System.out.println(indent + (i + 1) + "." + tasks[i]);
                 }
             } else if (input.startsWith("mark ")) {
                 int taskNumber = Integer.parseInt(input.substring(5));
                 int taskIndex = taskNumber - 1;
-                isDone[taskIndex] = true;
+                tasks[taskIndex].markAsDone();
                 System.out.println(indent + "Acknowledged. This task is now complete:");
-                System.out.println(indent + "  [X] " + tasks[taskIndex]);
+                System.out.println(indent + "  " + tasks[taskIndex]);
             } else if (input.startsWith("unmark ")) {
                 int taskNumber = Integer.parseInt(input.substring(7));
                 int taskIndex = taskNumber - 1;
-                isDone[taskIndex] = false;
+                tasks[taskIndex].markAsNotDone();
                 System.out.println(indent + "Reverted. This task is once again incomplete:");
-                System.out.println(indent + "  [ ] " + tasks[taskIndex]);
+                System.out.println(indent + "  " + tasks[taskIndex]);
             } else {
-                tasks[taskCount] = input;
+                tasks[taskCount] = new Task(input);
                 taskCount++;
                 System.out.println(indent + "added: " + input);
             }
