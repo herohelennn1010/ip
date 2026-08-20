@@ -122,15 +122,45 @@ public class Sophon {
                     System.out.println(indent + "Recorded. A new event has entered observation:");
                     System.out.println(indent + "  " + event);
                     System.out.println(indent + tasks.size() + " tasks are currently under observation.");
-                } else if (input.startsWith("mark ")) {
-                    int taskNumber = Integer.parseInt(input.substring(5));
+                } else if (input.equals("mark") || input.startsWith("mark ")) {
+                    String taskNumberText = input.length() == 4 ? "" : input.substring(5).trim();
+                    if (taskNumberText.isBlank()) {
+                        throw new SophonException("Tell me which task has completed its observation.");
+                    }
+
+                    int taskNumber;
+                    try {
+                        taskNumber = Integer.parseInt(taskNumberText);
+                    } catch (NumberFormatException e) {
+                        throw new SophonException("Task numbers must be written as numerals.");
+                    }
+
                     int taskIndex = taskNumber - 1;
+                    if (taskIndex < 0 || taskIndex >= tasks.size()) {
+                        throw new SophonException("No task exists at that number.");
+                    }
+
                     tasks.get(taskIndex).markAsDone();
                     System.out.println(indent + "Acknowledged. This task is now complete:");
                     System.out.println(indent + "  " + tasks.get(taskIndex));
-                } else if (input.startsWith("unmark ")) {
-                    int taskNumber = Integer.parseInt(input.substring(7));
+                } else if (input.equals("unmark") || input.startsWith("unmark ")) {
+                    String taskNumberText = input.length() == 6 ? "" : input.substring(7).trim();
+                    if (taskNumberText.isBlank()) {
+                        throw new SophonException("Tell me which task has returned to observation.");
+                    }
+
+                    int taskNumber;
+                    try {
+                        taskNumber = Integer.parseInt(taskNumberText);
+                    } catch (NumberFormatException e) {
+                        throw new SophonException("Task numbers must be written as numerals.");
+                    }
+
                     int taskIndex = taskNumber - 1;
+                    if (taskIndex < 0 || taskIndex >= tasks.size()) {
+                        throw new SophonException("No task exists at that number.");
+                    }
+
                     tasks.get(taskIndex).markAsNotDone();
                     System.out.println(indent + "Reverted. This task is once again incomplete:");
                     System.out.println(indent + "  " + tasks.get(taskIndex));
