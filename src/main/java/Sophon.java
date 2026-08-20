@@ -61,16 +61,28 @@ public class Sophon {
                     System.out.println(indent + "Recorded. A new task has entered observation:");
                     System.out.println(indent + "  " + todo);
                     System.out.println(indent + taskCount + " tasks are currently under observation.");
-                } else if (input.startsWith("deadline ")) {
-                    int byIndex = input.indexOf(" /by ");
-                    if (byIndex == -1 || input.substring(9, byIndex).isBlank()
-                            || input.substring(byIndex + 5).isBlank()) {
-                        System.out.println(indent + "Deadline format: deadline DESCRIPTION /by WHEN");
-                        System.out.println(line);
-                        continue;
+                } else if (input.equals("deadline") || input.startsWith("deadline ")) {
+                    String details = input.length() == 8 ? "" : input.substring(8).trim();
+                    int byIndex = details.indexOf("/by");
+                    if (details.isBlank()) {
+                        throw new SophonException("You have told me neither what must be done nor when.\n"
+                                + "A deadline requires both.");
+                    } else if (byIndex == -1) {
+                        throw new SophonException("I know what must be done, but not when.\n"
+                                + "Specify when it is due using /by.");
                     }
-                    String description = input.substring(9, byIndex);
-                    String by = input.substring(byIndex + 5);
+                    String description = details.substring(0, byIndex).trim();
+                    String by = details.substring(byIndex + 3).trim();
+                    if (description.isBlank() && by.isBlank()) {
+                        throw new SophonException("You have given me a boundary, but nothing to bind to it.\n"
+                                + "Tell me what must be done, and when.");
+                    } else if (description.isBlank()) {
+                        throw new SophonException("I know when, but not what.\n"
+                                + "Give the deadline a description.");
+                    } else if (by.isBlank()) {
+                        throw new SophonException("I see the task, but its deadline remains unknown.\n"
+                                + "Tell me when it is due.");
+                    }
                     Deadline deadline = new Deadline(description, by);
                     tasks[taskCount] = deadline;
                     taskCount++;

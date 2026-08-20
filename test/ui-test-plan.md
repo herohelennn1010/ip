@@ -99,7 +99,7 @@ ____________________________________________________________
 
 ### TC-03: Handle malformed task commands and plain tasks
 
-Aim: Verify that Sophon does not crash on malformed typed commands, rejects todos without descriptions, and records plain input as a normal task.
+Aim: Verify that Sophon does not crash on malformed typed commands, rejects todos and deadlines with missing fields, and records plain input as a normal task.
 
 Command:
 ```text
@@ -110,7 +110,12 @@ Inputs:
 ```text
 todo
 todo 
+deadline
 deadline return book
+deadline return book /by
+deadline /by Sunday
+deadline /by
+deadline       return book       /by       Sunday
 event project meeting /from Mon 2pm
 read book
 list
@@ -139,7 +144,29 @@ ____________________________________________________________
      A todo requires a description.
 ____________________________________________________________
 ____________________________________________________________
-     Deadline format: deadline DESCRIPTION /by WHEN
+     You have told me neither what must be done nor when.
+     A deadline requires both.
+____________________________________________________________
+____________________________________________________________
+     I know what must be done, but not when.
+     Specify when it is due using /by.
+____________________________________________________________
+____________________________________________________________
+     I see the task, but its deadline remains unknown.
+     Tell me when it is due.
+____________________________________________________________
+____________________________________________________________
+     I know when, but not what.
+     Give the deadline a description.
+____________________________________________________________
+____________________________________________________________
+     You have given me a boundary, but nothing to bind to it.
+     Tell me what must be done, and when.
+____________________________________________________________
+____________________________________________________________
+     Recorded. A new deadline has entered observation:
+       [D][ ] return book (by: Sunday)
+     1 tasks are currently under observation.
 ____________________________________________________________
 ____________________________________________________________
      Event format: event DESCRIPTION /from START /to END
@@ -149,7 +176,8 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
      Current tasks under observation:
-     1.[ ] read book
+     1.[D][ ] return book (by: Sunday)
+     2.[ ] read book
 ____________________________________________________________
 ____________________________________________________________
      Our conversation ends here.
