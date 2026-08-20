@@ -9,8 +9,8 @@ Unless the user says otherwise, assume that you are assisting a student working 
 # Student profile
 
 * Prior knowledge: Basic Java and OOP concepts.
-* Level of programming experience: [to be filled]
-* IDE and level of expertise: [to be filled]
+* Level of programming experience: Has completed core NUS CS coursework covering discrete structures, introductory programming, object-oriented programming, data structures and algorithms, and computer organization (`CS1231S`, `CS1010`, `CS2030S`, `CS2040S`, `CS2100`). Project experience is limited to one external project, Orbital. Overall, assume foundational CS knowledge but limited experience with larger software engineering projects.
+* IDE and level of expertise: Beginner IDE user; familiar with basic editing/running/debugging workflows, but may need guidance for project configuration, build tools, refactoring tools, and advanced IDE features.
 
 # Guidance for interacting with users
 
@@ -23,6 +23,10 @@ Unless the user says otherwise, assume that you are assisting a student working 
   * When faced with a design choice, choose the simplest option that is sufficient for the requirements, while briefly explaining relevant more advanced alternatives.
 
 # Project-specific requirements
+
+## iP course requirements:
+
+Before helping with implementation, project management, documentation, or grading-related work, read `.codex/ip-requirements.md` and follow it as the living course checklist. Update that file when the official iP weekly or grading pages change.
 
 ## Java version:
 
