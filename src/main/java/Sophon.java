@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -23,8 +24,7 @@ public class Sophon {
                 + "What do you wish to communicate?";
         String bye = "Our conversation ends here.\n"
                 + "Until we meet again.";
-        Task[] tasks = new Task[100];
-        int taskCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
 
         Scanner scanner = new Scanner(System.in);
 
@@ -46,8 +46,8 @@ public class Sophon {
             try {
                 if (input.equals("list")) {
                     System.out.println(indent + "Current tasks under observation:");
-                    for (int i = 0; i < taskCount; i++) {
-                        System.out.println(indent + (i + 1) + "." + tasks[i]);
+                    for (int i = 0; i < tasks.size(); i++) {
+                        System.out.println(indent + (i + 1) + "." + tasks.get(i));
                     }
                 } else if (input.equals("todo") || input.startsWith("todo ")) {
                     String description = input.length() == 4 ? "" : input.substring(5).trim();
@@ -56,11 +56,10 @@ public class Sophon {
                                 + "A todo requires a description.");
                     }
                     Todo todo = new Todo(description);
-                    tasks[taskCount] = todo;
-                    taskCount++;
+                    tasks.add(todo);
                     System.out.println(indent + "Recorded. A new task has entered observation:");
                     System.out.println(indent + "  " + todo);
-                    System.out.println(indent + taskCount + " tasks are currently under observation.");
+                    System.out.println(indent + tasks.size() + " tasks are currently under observation.");
                 } else if (input.equals("deadline") || input.startsWith("deadline ")) {
                     String details = input.length() == 8 ? "" : input.substring(8).trim();
                     int byIndex = details.indexOf("/by");
@@ -84,11 +83,10 @@ public class Sophon {
                                 + "Tell me when it is due.");
                     }
                     Deadline deadline = new Deadline(description, by);
-                    tasks[taskCount] = deadline;
-                    taskCount++;
+                    tasks.add(deadline);
                     System.out.println(indent + "Recorded. A new deadline has entered observation:");
                     System.out.println(indent + "  " + deadline);
-                    System.out.println(indent + taskCount + " tasks are currently under observation.");
+                    System.out.println(indent + tasks.size() + " tasks are currently under observation.");
                 } else if (input.equals("event") || input.startsWith("event ")) {
                     String details = input.length() == 5 ? "" : input.substring(5).trim();
                     int fromIndex = details.indexOf("/from");
@@ -120,23 +118,22 @@ public class Sophon {
                                 + "Tell me when it ends.");
                     }
                     Event event = new Event(description, from, to);
-                    tasks[taskCount] = event;
-                    taskCount++;
+                    tasks.add(event);
                     System.out.println(indent + "Recorded. A new event has entered observation:");
                     System.out.println(indent + "  " + event);
-                    System.out.println(indent + taskCount + " tasks are currently under observation.");
+                    System.out.println(indent + tasks.size() + " tasks are currently under observation.");
                 } else if (input.startsWith("mark ")) {
                     int taskNumber = Integer.parseInt(input.substring(5));
                     int taskIndex = taskNumber - 1;
-                    tasks[taskIndex].markAsDone();
+                    tasks.get(taskIndex).markAsDone();
                     System.out.println(indent + "Acknowledged. This task is now complete:");
-                    System.out.println(indent + "  " + tasks[taskIndex]);
+                    System.out.println(indent + "  " + tasks.get(taskIndex));
                 } else if (input.startsWith("unmark ")) {
                     int taskNumber = Integer.parseInt(input.substring(7));
                     int taskIndex = taskNumber - 1;
-                    tasks[taskIndex].markAsNotDone();
+                    tasks.get(taskIndex).markAsNotDone();
                     System.out.println(indent + "Reverted. This task is once again incomplete:");
-                    System.out.println(indent + "  " + tasks[taskIndex]);
+                    System.out.println(indent + "  " + tasks.get(taskIndex));
                 } else {
                     System.out.println(indent + "Your message has been observed.\n"
                             + indent + "Its meaning, however, remains unknown.");
