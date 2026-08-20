@@ -99,7 +99,7 @@ ____________________________________________________________
 
 ### TC-03: Handle malformed task commands and plain tasks
 
-Aim: Verify that Sophon does not crash on malformed typed commands, rejects todos and deadlines with missing fields, and records plain input as a normal task.
+Aim: Verify that Sophon does not crash on malformed typed commands, rejects todos, deadlines, and events with missing fields, and records plain input as a normal task.
 
 Command:
 ```text
@@ -116,7 +116,13 @@ deadline return book /by
 deadline /by Sunday
 deadline /by
 deadline       return book       /by       Sunday
+event
+event project meeting
+event add /to
 event project meeting /from Mon 2pm
+event project meeting /from Mon 2pm /to
+event /from Mon 2pm /to 4pm
+event project meeting /from /to 4pm
 read book
 list
 bye
@@ -169,7 +175,32 @@ ____________________________________________________________
      1 tasks are currently under observation.
 ____________________________________________________________
 ____________________________________________________________
-     Event format: event DESCRIPTION /from START /to END
+     You have told me neither what will happen nor when.
+     An event requires both.
+____________________________________________________________
+____________________________________________________________
+     I know what will happen, but not when.
+     Tell me when it begins and when it ends.
+____________________________________________________________
+____________________________________________________________
+     I see when it ends, but not when it begins.
+     Tell me when it begins.
+____________________________________________________________
+____________________________________________________________
+     I see when it begins, but not when it ends.
+     Specify an end time using /to.
+____________________________________________________________
+____________________________________________________________
+     I see when it begins, but its end remains unknown.
+     Tell me when it ends.
+____________________________________________________________
+____________________________________________________________
+     I know when, but not what.
+     Give the event a description.
+____________________________________________________________
+____________________________________________________________
+     I see when it ends, but not when it begins.
+     Tell me when it begins.
 ____________________________________________________________
 ____________________________________________________________
      added: read book

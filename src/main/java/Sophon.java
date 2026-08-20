@@ -89,20 +89,36 @@ public class Sophon {
                     System.out.println(indent + "Recorded. A new deadline has entered observation:");
                     System.out.println(indent + "  " + deadline);
                     System.out.println(indent + taskCount + " tasks are currently under observation.");
-                } else if (input.startsWith("event ")) {
-                    int fromIndex = input.indexOf(" /from ");
-                    int toIndex = input.indexOf(" /to ");
-                    if (fromIndex == -1 || toIndex == -1 || toIndex < fromIndex
-                            || input.substring(6, fromIndex).isBlank()
-                            || input.substring(fromIndex + 7, toIndex).isBlank()
-                            || input.substring(toIndex + 5).isBlank()) {
-                        System.out.println(indent + "Event format: event DESCRIPTION /from START /to END");
-                        System.out.println(line);
-                        continue;
+                } else if (input.equals("event") || input.startsWith("event ")) {
+                    String details = input.length() == 5 ? "" : input.substring(5).trim();
+                    int fromIndex = details.indexOf("/from");
+                    int toIndex = details.indexOf("/to");
+                    if (details.isBlank()) {
+                        throw new SophonException("You have told me neither what will happen nor when.\n"
+                                + "An event requires both.");
+                    } else if (fromIndex == -1 && toIndex == -1) {
+                        throw new SophonException("I know what will happen, but not when.\n"
+                                + "Tell me when it begins and when it ends.");
+                    } else if (fromIndex == -1) {
+                        throw new SophonException("I see when it ends, but not when it begins.\n"
+                                + "Tell me when it begins.");
+                    } else if (toIndex == -1 || toIndex < fromIndex) {
+                        throw new SophonException("I see when it begins, but not when it ends.\n"
+                                + "Specify an end time using /to.");
                     }
-                    String description = input.substring(6, fromIndex);
-                    String from = input.substring(fromIndex + 7, toIndex);
-                    String to = input.substring(toIndex + 5);
+                    String description = details.substring(0, fromIndex).trim();
+                    String from = details.substring(fromIndex + 5, toIndex).trim();
+                    String to = details.substring(toIndex + 3).trim();
+                    if (description.isBlank()) {
+                        throw new SophonException("I know when, but not what.\n"
+                                + "Give the event a description.");
+                    } else if (from.isBlank()) {
+                        throw new SophonException("I see when it ends, but not when it begins.\n"
+                                + "Tell me when it begins.");
+                    } else if (to.isBlank()) {
+                        throw new SophonException("I see when it begins, but its end remains unknown.\n"
+                                + "Tell me when it ends.");
+                    }
                     Event event = new Event(description, from, to);
                     tasks[taskCount] = event;
                     taskCount++;
