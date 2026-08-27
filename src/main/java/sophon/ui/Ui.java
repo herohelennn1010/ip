@@ -27,6 +27,11 @@ public class Ui {
         System.out.print(text);
     }
 
+    /**
+     * Shows the startup greeting and any warning from loading saved tasks.
+     *
+     * @param startupWarning warning to show below the greeting, or {@code null} if there is no warning
+     */
     public void showGreeting(String startupWarning) {
         String greeting = "你好! I'm Sophon.\n"
                 + "I'm listening.\n"
