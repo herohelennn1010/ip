@@ -1,13 +1,16 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 /**
- * Represents a task that occurs from one date or time to another.
+ * Represents a task that occurs from one date to another.
  */
 public class Event extends Task {
 
-    /** Date or time when the event starts. */
-    private final String fromWhen;
+    /** Date when the event starts. */
+    private final LocalDate fromWhen;
 
-    /** Date or time when the event ends. */
-    private final String toWhen;
+    /** Date when the event ends. */
+    private final LocalDate toWhen;
 
     /**
      * Creates an event with the given description, start, and end.
@@ -16,24 +19,26 @@ public class Event extends Task {
      * @param fromWhen when the event starts
      * @param toWhen when the event ends
      */
-    public Event(String description, String fromWhen, String toWhen) {
+    public Event(String description, LocalDate fromWhen, LocalDate toWhen) {
         super(description, TaskType.EVENT);
         this.fromWhen = fromWhen;
         this.toWhen = toWhen;
     }
 
     /**
-     * Returns this event in the format shown to the user.
+     * Returns this event with its dates shown in a user-friendly format.
      *
      * @return display representation of this event
      */
     @Override
     public String toString() {
-        return super.toString() + " (from: " + fromWhen + " to: " + toWhen + ")";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy");
+        return super.toString() + " (from: " + fromWhen.format(formatter)
+                + " to: " + toWhen.format(formatter) + ")";
     }
 
     /**
-     * Returns this event in the format used by the save file.
+     * Returns this event in the ISO date format used by the save file.
      *
      * @return save file representation of this event
      */

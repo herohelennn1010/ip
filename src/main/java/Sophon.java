@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -64,14 +66,14 @@ public class Sophon {
             } else if (parts[3].isBlank()) {
                 throw new SophonException("The save file contains an empty deadline time.");
             }
-            task = new Deadline(description, parts[3]);
+            task = new Deadline(description, convertDate(parts[3]));
         } else if (type.equals("E")) {
             if (parts.length != 5) {
                 throw new SophonException("The save file contains an invalid event.");
             } else if (parts[3].isBlank() || parts[4].isBlank()) {
                 throw new SophonException("The save file contains an empty event time.");
             }
-            task = new Event(description, parts[3], parts[4]);
+            task = new Event(description, convertDate(parts[3]), convertDate(parts[4]));
         } else {
             throw new SophonException("The save file contains an unknown task type.");
         }
@@ -118,6 +120,21 @@ public class Sophon {
     private static void checkFileSafe(String text) throws SophonException {
         if (text.contains(" | ")) {
             throw new SophonException("Please do not use \" | \" in task details.");
+        }
+    }
+
+    /**
+     * Converts text in yyyy-MM-dd format into a date.
+     *
+     * @param text date text to convert
+     * @return date represented by the text
+     * @throws SophonException if the text is not in yyyy-MM-dd format
+     */
+    private static LocalDate convertDate(String text) throws SophonException {
+        try {
+            return LocalDate.parse(text);
+        } catch (DateTimeParseException e) {
+            throw new SophonException("Please enter the date in yyyy-MM-dd format.");
         }
     }
 
@@ -216,7 +233,9 @@ public class Sophon {
                     }
                     checkFileSafe(description);
                     checkFileSafe(by);
-                    Deadline deadline = new Deadline(description, by);
+                    LocalDate byTime = convertDate(by);
+
+                    Deadline deadline = new Deadline(description, byTime);
                     tasks.add(deadline);
                     saveTasks(tasks);
                     System.out.println(indent + "Recorded. A new deadline has entered observation:");
@@ -255,7 +274,9 @@ public class Sophon {
                     checkFileSafe(description);
                     checkFileSafe(from);
                     checkFileSafe(to);
-                    Event event = new Event(description, from, to);
+                    LocalDate fromTime = convertDate(from);
+                    LocalDate toTime = convertDate(to);
+                    Event event = new Event(description, fromTime, toTime);
                     tasks.add(event);
                     saveTasks(tasks);
                     System.out.println(indent + "Recorded. A new event has entered observation:");
