@@ -1,7 +1,4 @@
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -11,104 +8,6 @@ import java.util.Scanner;
  * Entry point for the Sophon chatbot.
  */
 public class Sophon {
-    /**
-     * Saves the current task list to the hard disk.
-     *
-     * @param tasks tasks to save
-     * @throws IOException if the file cannot be written
-     */
-    private static void saveTasks(ArrayList<Task> tasks) throws IOException {
-        Path filePath = Path.of("data", "sophon.txt");
-        Files.createDirectories(filePath.getParent());
-
-        ArrayList<String> lines = new ArrayList<>();
-        for (Task task : tasks) {
-            lines.add(task.toFileString());
-        }
-
-        Files.write(filePath, lines, StandardCharsets.UTF_8);
-    }
-
-    /**
-     * Parses the given tasks from saved tasks in disk.
-     *
-     * @param line line from the save file
-     * @return task parsed from text
-     * @throws SophonException if the line does not match the save file format
-     */
-    private static Task parseTask(String line) throws SophonException {
-        String[] parts = line.split(" \\| ");
-
-        if (parts.length < 3) {
-            throw new SophonException("The save file contains an incomplete task.");
-        }
-
-        String type = parts[0];
-        String status = parts[1];
-        String description = parts[2];
-
-        if (!status.equals("0") && !status.equals("1")) {
-            throw new SophonException("The save file contains an invalid task status.");
-        } else if (description.isBlank()) {
-            throw new SophonException("The save file contains an empty task description.");
-        }
-
-        Task task;
-        if (type.equals("T")) {
-            if (parts.length != 3) {
-                throw new SophonException("The save file contains an invalid todo.");
-            }
-            task = new Todo(description);
-        } else if (type.equals("D")) {
-            if (parts.length != 4) {
-                throw new SophonException("The save file contains an invalid deadline.");
-            } else if (parts[3].isBlank()) {
-                throw new SophonException("The save file contains an empty deadline time.");
-            }
-            task = new Deadline(description, convertDate(parts[3]));
-        } else if (type.equals("E")) {
-            if (parts.length != 5) {
-                throw new SophonException("The save file contains an invalid event.");
-            } else if (parts[3].isBlank() || parts[4].isBlank()) {
-                throw new SophonException("The save file contains an empty event time.");
-            }
-            task = new Event(description, convertDate(parts[3]), convertDate(parts[4]));
-        } else {
-            throw new SophonException("The save file contains an unknown task type.");
-        }
-
-        if (status.equals("1")) {
-            task.markAsDone();
-        }
-
-        return task;
-    }
-
-    /**
-     * Loads tasks written in the disk.
-     *
-     * @return task lists parsed from disk file.
-     * @throws IOException if the file cannot be read
-     * @throws SophonException if the save file content is invalid
-     */
-    private static ArrayList<Task> loadTasks() throws IOException, SophonException {
-        Path filePath = Path.of("data", "sophon.txt");
-        ArrayList<Task> tasks = new ArrayList<>();
-
-        if (!Files.exists(filePath)) {
-            return tasks;
-        }
-
-        for (String line : Files.readAllLines(filePath, StandardCharsets.UTF_8)) {
-            if (line.isBlank()) {
-                continue;
-            }
-
-            tasks.add(parseTask(line));
-        }
-
-        return tasks;
-    }
 
     /**
      * Checks whether text can be written safely in the save file format.
@@ -144,10 +43,11 @@ public class Sophon {
      */
     public static void main(String[] args) {
         Ui ui = new Ui();
+        Storage storage = new Storage("data", "sophon.txt");
         ArrayList<Task> tasks;
         String startupWarning = null;
         try {
-            tasks = loadTasks();
+            tasks = storage.loadTasks();
         } catch (IOException e) {
             startupWarning = "I could not read the saved tasks.";
             tasks = new ArrayList<>();
@@ -181,7 +81,7 @@ public class Sophon {
                     checkFileSafe(description);
                     Todo todo = new Todo(description);
                     tasks.add(todo);
-                    saveTasks(tasks);
+                    storage.saveTasks(tasks);
                     ui.showMessage("Recorded. A new task has entered observation:");
                     ui.showMessage("  " + todo);
                     ui.showMessage(tasks.size() + " tasks are currently under observation.");
@@ -213,7 +113,7 @@ public class Sophon {
 
                     Deadline deadline = new Deadline(description, byTime);
                     tasks.add(deadline);
-                    saveTasks(tasks);
+                    storage.saveTasks(tasks);
                     ui.showMessage("Recorded. A new deadline has entered observation:");
                     ui.showMessage("  " + deadline);
                     ui.showMessage(tasks.size() + " tasks are currently under observation.");
@@ -254,7 +154,7 @@ public class Sophon {
                     LocalDate toTime = convertDate(to);
                     Event event = new Event(description, fromTime, toTime);
                     tasks.add(event);
-                    saveTasks(tasks);
+                    storage.saveTasks(tasks);
                     ui.showMessage("Recorded. A new event has entered observation:");
                     ui.showMessage("  " + event);
                     ui.showMessage(tasks.size() + " tasks are currently under observation.");
@@ -277,7 +177,7 @@ public class Sophon {
                     }
 
                     tasks.get(taskIndex).markAsDone();
-                    saveTasks(tasks);
+                    storage.saveTasks(tasks);
                     ui.showMessage("Acknowledged. This task is now complete:");
                     ui.showMessage("  " + tasks.get(taskIndex));
                 } else if (input.equals("unmark") || input.startsWith("unmark ")) {
@@ -299,7 +199,7 @@ public class Sophon {
                     }
 
                     tasks.get(taskIndex).markAsNotDone();
-                    saveTasks(tasks);
+                    storage.saveTasks(tasks);
                     ui.showMessage("Reverted. This task is once again incomplete:");
                     ui.showMessage("  " + tasks.get(taskIndex));
                 } else if (input.equals("delete") || input.startsWith("delete ")) {
@@ -321,7 +221,7 @@ public class Sophon {
                     }
 
                     Task removedTask = tasks.remove(taskIndex);
-                    saveTasks(tasks);
+                    storage.saveTasks(tasks);
                     ui.showMessage("Removed. This task is no longer under observation:");
                     ui.showMessage("  " + removedTask);
                     ui.showMessage(tasks.size() + " tasks remain under observation.");
