@@ -1,5 +1,15 @@
+package sophon;
+
 import java.io.IOException;
 import java.util.Scanner;
+
+import sophon.exception.SophonException;
+import sophon.logic.Command;
+import sophon.logic.Parser;
+import sophon.model.Task;
+import sophon.model.TaskList;
+import sophon.storage.Storage;
+import sophon.ui.Ui;
 
 /**
  * Entry point for the Sophon chatbot.

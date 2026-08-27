@@ -1,3 +1,5 @@
+package sophon.model;
+
 /**
  * Represents the type of task shown in the task list.
  */

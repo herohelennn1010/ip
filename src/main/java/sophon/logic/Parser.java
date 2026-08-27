@@ -1,5 +1,12 @@
+package sophon.logic;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+
+import sophon.exception.SophonException;
+import sophon.model.Deadline;
+import sophon.model.Event;
+import sophon.model.Todo;
 
 /**
  * Makes sense of user command text.

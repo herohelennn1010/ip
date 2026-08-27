@@ -1,3 +1,7 @@
+package sophon.logic;
+
+import sophon.model.Task;
+
 /**
  * Represents a user command after it has been parsed.
  */

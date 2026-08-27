@@ -1,3 +1,5 @@
+package sophon.model;
+
 import java.util.ArrayList;
 
 /**

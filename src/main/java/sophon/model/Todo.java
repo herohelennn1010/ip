@@ -1,3 +1,5 @@
+package sophon.model;
+
 /**
  * Represents a task without any date or time attached to it.
  */

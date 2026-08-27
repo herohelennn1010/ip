@@ -1,3 +1,5 @@
+package sophon.storage;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -6,9 +8,25 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+import sophon.exception.SophonException;
+import sophon.model.Deadline;
+import sophon.model.Event;
+import sophon.model.Task;
+import sophon.model.TaskList;
+import sophon.model.Todo;
+
+/**
+ * Handles saving tasks to disk and loading them when Sophon starts.
+ */
 public class Storage {
     private final Path filePath;
 
+    /**
+     * Creates storage that reads from and writes to the given save file path.
+     *
+     * @param first first part of the save file path
+     * @param more remaining parts of the save file path
+     */
     public Storage(String first, String... more) {
         this.filePath = Path.of(first, more);
     }

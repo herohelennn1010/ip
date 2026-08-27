@@ -1,3 +1,5 @@
+package sophon.exception;
+
 /**
  * Represents an error caused by input that Sophon cannot understand.
  */
