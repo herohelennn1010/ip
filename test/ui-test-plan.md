@@ -173,8 +173,8 @@ powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -Erro
 Inputs:
 ```text
 todo read book
-deadline return book /by Sunday
-event project meeting /from Mon 2pm /to 4pm
+deadline return book /by 2019-10-15
+event project meeting /from 2019-10-15 /to 2019-10-16
 list
 bye
 ```
@@ -199,19 +199,19 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
      Recorded. A new deadline has entered observation:
-       [D][ ] return book (by: Sunday)
+       [D][ ] return book (by: Oct 15 2019)
      2 tasks are currently under observation.
 ____________________________________________________________
 ____________________________________________________________
      Recorded. A new event has entered observation:
-       [E][ ] project meeting (from: Mon 2pm to: 4pm)
+       [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
      3 tasks are currently under observation.
 ____________________________________________________________
 ____________________________________________________________
      Current tasks under observation:
      1.[T][ ] read book
-     2.[D][ ] return book (by: Sunday)
-     3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+     2.[D][ ] return book (by: Oct 15 2019)
+     3.[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 ____________________________________________________________
 ____________________________________________________________
      Our conversation ends here.
@@ -237,7 +237,7 @@ deadline return book
 deadline return book /by
 deadline /by Sunday
 deadline /by
-deadline       return book       /by       Sunday
+deadline       return book       /by       2019-10-15
 event
 event project meeting
 event add /to
@@ -293,7 +293,7 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
      Recorded. A new deadline has entered observation:
-       [D][ ] return book (by: Sunday)
+       [D][ ] return book (by: Oct 15 2019)
      1 tasks are currently under observation.
 ____________________________________________________________
 ____________________________________________________________
@@ -330,7 +330,7 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
      Current tasks under observation:
-     1.[D][ ] return book (by: Sunday)
+     1.[D][ ] return book (by: Oct 15 2019)
 ____________________________________________________________
 ____________________________________________________________
      Our conversation ends here.
@@ -514,7 +514,7 @@ Aim: Verify that Sophon writes the latest task list to `data\sophon.txt` after a
 
 Command:
 ```text
-powershell -NoProfile -Command "$commands = @('todo read book', 'deadline return book /by Sunday', 'event project meeting /from Mon 2pm /to 4pm', 'mark 1', 'delete 2', 'bye') -join [Environment]::NewLine; Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon; 'SAVED FILE:'; Get-Content -LiteralPath 'data\sophon.txt'"
+powershell -NoProfile -Command "$commands = @('todo read book', 'deadline return book /by 2019-10-15', 'event project meeting /from 2019-10-15 /to 2019-10-16', 'mark 1', 'delete 2', 'bye') -join [Environment]::NewLine; Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon; 'SAVED FILE:'; Get-Content -LiteralPath 'data\sophon.txt'"
 ```
 
 Inputs:
@@ -542,12 +542,12 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
      Recorded. A new deadline has entered observation:
-       [D][ ] return book (by: Sunday)
+       [D][ ] return book (by: Oct 15 2019)
      2 tasks are currently under observation.
 ____________________________________________________________
 ____________________________________________________________
      Recorded. A new event has entered observation:
-       [E][ ] project meeting (from: Mon 2pm to: 4pm)
+       [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
      3 tasks are currently under observation.
 ____________________________________________________________
 ____________________________________________________________
@@ -556,7 +556,7 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
      Removed. This task is no longer under observation:
-       [D][ ] return book (by: Sunday)
+       [D][ ] return book (by: Oct 15 2019)
      2 tasks remain under observation.
 ____________________________________________________________
 ____________________________________________________________
@@ -565,7 +565,7 @@ ____________________________________________________________
 ____________________________________________________________
 SAVED FILE:
 T | 1 | read book
-E | 0 | project meeting | Mon 2pm | 4pm
+E | 0 | project meeting | 2019-10-15 | 2019-10-16
 ```
 
 ### TC-07: Load tasks on startup
@@ -574,7 +574,7 @@ Aim: Verify that Sophon loads todos, deadlines, and events from `data\sophon.txt
 
 Command:
 ```text
-powershell -NoProfile -Command "New-Item -ItemType Directory -Force -Path data | Out-Null; [System.IO.File]::WriteAllLines('data\sophon.txt', [string[]]@('T | 1 | read book', 'D | 0 | return book | Sunday', 'E | 0 | project meeting | Mon 2pm | 4pm'), [System.Text.UTF8Encoding]::new($false)); $commands = @('list', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
+powershell -NoProfile -Command "New-Item -ItemType Directory -Force -Path data | Out-Null; [System.IO.File]::WriteAllLines('data\sophon.txt', [string[]]@('T | 1 | read book', 'D | 0 | return book | 2019-10-15', 'E | 0 | project meeting | 2019-10-15 | 2019-10-16'), [System.Text.UTF8Encoding]::new($false)); $commands = @('list', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
 ```
 
 Inputs:
@@ -598,8 +598,8 @@ ____________________________________________________________
 ____________________________________________________________
      Current tasks under observation:
      1.[T][X] read book
-     2.[D][ ] return book (by: Sunday)
-     3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+     2.[D][ ] return book (by: Oct 15 2019)
+     3.[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 ____________________________________________________________
 ____________________________________________________________
      Our conversation ends here.

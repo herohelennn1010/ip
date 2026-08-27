@@ -12,8 +12,8 @@ Common commands:
 
 ```text
 todo read book
-deadline return book /by Sunday
-event project meeting /from Mon 2pm /to 4pm
+deadline return book /by 2019-10-15
+event project meeting /from 2019-10-15 /to 2019-10-16
 list
 mark 1
 unmark 1
@@ -40,40 +40,41 @@ Sophon rejects a todo if the description is missing.
 
 ## Adding Deadlines
 
-Type `deadline`, followed by the task description, `/by`, and the deadline.
-Dates and times are stored exactly as typed.
+Type `deadline`, followed by the task description, `/by`, and the deadline
+date in `yyyy-MM-dd` format.
 
 Example:
 
 ```text
-deadline return book /by Sunday
+deadline return book /by 2019-10-15
     ____________________________________________________________
      Recorded. A new deadline has entered observation:
-       [D][ ] return book (by: Sunday)
+       [D][ ] return book (by: Oct 15 2019)
      1 tasks are currently under observation.
     ____________________________________________________________
 ```
 
-Sophon rejects a deadline if the description, `/by`, or deadline time is
-missing.
+Sophon rejects a deadline if the description, `/by`, or deadline date is
+missing or not in `yyyy-MM-dd` format.
 
 ## Adding Events
 
 Type `event`, followed by the task description, `/from`, the start, `/to`, and
-the end. Dates and times are stored exactly as typed.
+the end. Start and end dates must be in `yyyy-MM-dd` format.
 
 Example:
 
 ```text
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from 2019-10-15 /to 2019-10-16
     ____________________________________________________________
      Recorded. A new event has entered observation:
-       [E][ ] project meeting (from: Mon 2pm to: 4pm)
+       [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
      1 tasks are currently under observation.
     ____________________________________________________________
 ```
 
-Sophon rejects an event if the description, start time, or end time is missing.
+Sophon rejects an event if the description, start date, or end date is missing
+or not in `yyyy-MM-dd` format.
 
 ## Listing Tasks
 
@@ -86,8 +87,8 @@ list
     ____________________________________________________________
      Current tasks under observation:
      1.[T][ ] borrow book
-     2.[D][ ] return book (by: Sunday)
-     3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+     2.[D][ ] return book (by: Oct 15 2019)
+     3.[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
     ____________________________________________________________
 ```
 
@@ -124,9 +125,9 @@ Example:
 
 ```text
 delete 2
-    ____________________________________________________________
+     ____________________________________________________________
      Removed. This task is no longer under observation:
-       [D][ ] return book (by: Sunday)
+       [D][ ] return book (by: Oct 15 2019)
      2 tasks remain under observation.
     ____________________________________________________________
 ```
