@@ -11,6 +11,11 @@ public class Todo extends Task {
         super(description, TaskType.TODO);
     }
 
+    /**
+     * Returns this todo in the format used by the save file.
+     *
+     * @return save file representation of this todo
+     */
     @Override
     public String toFileString() {
         return "T | " + (isDone ? "1" : "0") + " | " + description;

@@ -2,10 +2,16 @@
  * Represents the type of task shown in the task list.
  */
 public enum TaskType {
+    /** Task without a date or time. */
     TODO("T"),
+
+    /** Task that should be completed by a date or time. */
     DEADLINE("D"),
+
+    /** Task that happens between a start and end date or time. */
     EVENT("E");
 
+    /** Short label shown for this task type. */
     private final String icon;
 
     /**
