@@ -36,6 +36,10 @@ Do not update the project-root `README.md` for chatbot feature or user-guide cha
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
 
+## Java coding standard:
+
+Before creating, editing, reviewing, or explaining Java code in this project, load and follow the project-specific `.codex/skills/seedu-java-coding-standard/SKILL.md` skill. All Java code should comply with the SE-EDU basic plus intermediate Java coding standard, using the Google Java style guide only for topics the SE-EDU standard does not cover.
+
 ## UI testing:
 
 After each code update, check whether `test/ui-test-plan.md` needs to be updated to cover the changed console behavior. Then invoke the project-specific `test-ui` skill and include the resulting test-session record in the response, especially any actual-vs-expected output if a test fails.

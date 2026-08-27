@@ -17,9 +17,9 @@ public class Event extends Task {
     /**
      * Creates an event with the given description, start, and end.
      *
-     * @param description details of the event
-     * @param fromWhen when the event starts
-     * @param toWhen when the event ends
+     * @param description details of the event.
+     * @param fromWhen when the event starts.
+     * @param toWhen when the event ends.
      */
     public Event(String description, LocalDate fromWhen, LocalDate toWhen) {
         super(description, TaskType.EVENT);
@@ -30,7 +30,7 @@ public class Event extends Task {
     /**
      * Returns this event with its dates shown in a user-friendly format.
      *
-     * @return display representation of this event
+     * @return display representation of this event.
      */
     @Override
     public String toString() {
@@ -42,7 +42,7 @@ public class Event extends Task {
     /**
      * Returns this event in the ISO date format used by the save file.
      *
-     * @return save file representation of this event
+     * @return save file representation of this event.
      */
     @Override
     public String toFileString() {

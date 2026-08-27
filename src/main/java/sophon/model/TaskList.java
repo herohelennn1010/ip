@@ -18,7 +18,7 @@ public class TaskList {
     /**
      * Creates a task list containing the given tasks.
      *
-     * @param tasks tasks to store
+     * @param tasks tasks to store.
      */
     public TaskList(ArrayList<Task> tasks) {
         this.tasks = tasks;
@@ -27,7 +27,7 @@ public class TaskList {
     /**
      * Adds a task to the list.
      *
-     * @param task task to add
+     * @param task task to add.
      */
     public void add(Task task) {
         tasks.add(task);
@@ -36,8 +36,8 @@ public class TaskList {
     /**
      * Returns the task at the given zero-based index.
      *
-     * @param index zero-based task index
-     * @return task at the given index
+     * @param index zero-based task index.
+     * @return task at the given index.
      */
     public Task get(int index) {
         return tasks.get(index);
@@ -46,8 +46,8 @@ public class TaskList {
     /**
      * Removes and returns the task at the given zero-based index.
      *
-     * @param index zero-based task index
-     * @return removed task
+     * @param index zero-based task index.
+     * @return removed task.
      */
     public Task remove(int index) {
         return tasks.remove(index);
@@ -56,7 +56,7 @@ public class TaskList {
     /**
      * Returns the number of tasks in the list.
      *
-     * @return number of tasks
+     * @return number of tasks.
      */
     public int size() {
         return tasks.size();
@@ -65,8 +65,8 @@ public class TaskList {
     /**
      * Checks whether the given zero-based index points to an existing task.
      *
-     * @param index zero-based task index
-     * @return true if a task exists at the index
+     * @param index zero-based task index.
+     * @return true if a task exists at the index.
      */
     public boolean isValidIndex(int index) {
         return index >= 0 && index < tasks.size();

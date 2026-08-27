@@ -15,18 +15,36 @@ public class Ui {
             + "|____/ \\___/| .__/|_| |_|\\___/|_| |_|\n"
             + "            |_|                       \n";
 
+    /**
+     * Shows a horizontal divider line.
+     */
     public void showLine() {
         System.out.println(LINE);
     }
 
+    /**
+     * Shows text using the standard Sophon indentation.
+     *
+     * @param text text to show.
+     */
     public void showIndented(String text) {
         System.out.println(INDENT + text.replace("\n", "\n" + INDENT));
     }
 
+    /**
+     * Shows text exactly as given.
+     *
+     * @param text text to show.
+     */
     public void showRaw(String text) {
         System.out.print(text);
     }
 
+    /**
+     * Shows Sophon's greeting and any startup warning.
+     *
+     * @param startupWarning warning to show after the greeting, or null if startup succeeded.
+     */
     public void showGreeting(String startupWarning) {
         String greeting = "你好! I'm Sophon.\n"
                 + "I'm listening.\n"
@@ -41,6 +59,9 @@ public class Ui {
         showLine();
     }
 
+    /**
+     * Shows Sophon's farewell message.
+     */
     public void showBye() {
         String bye = "Our conversation ends here.\n"
                 + "Until we meet again.";
@@ -49,14 +70,29 @@ public class Ui {
         showLine();
     }
 
+    /**
+     * Shows an error message.
+     *
+     * @param message error message to show.
+     */
     public void showError(String message) {
         showIndented(message);
     }
 
+    /**
+     * Shows a normal message.
+     *
+     * @param message message to show.
+     */
     public void showMessage(String message) {
         showIndented(message);
     }
 
+    /**
+     * Shows all tasks currently tracked by Sophon.
+     *
+     * @param tasks tasks to show.
+     */
     public void showList(TaskList tasks) {
         showIndented("Current tasks under observation:");
         for (int i = 0; i < tasks.size(); i++) {

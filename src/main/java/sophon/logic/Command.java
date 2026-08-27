@@ -28,7 +28,7 @@ public class Command {
     /**
      * Creates a command without extra data.
      *
-     * @param type category of command
+     * @param type category of command.
      */
     public Command(Type type) {
         this(type, null, -1);
@@ -37,8 +37,8 @@ public class Command {
     /**
      * Creates a command that contains a task.
      *
-     * @param type category of command
-     * @param task task carried by the command
+     * @param type category of command.
+     * @param task task carried by the command.
      */
     public Command(Type type, Task task) {
         this(type, task, -1);
@@ -47,8 +47,8 @@ public class Command {
     /**
      * Creates a command that refers to an existing task.
      *
-     * @param type category of command
-     * @param taskIndex zero-based index of the task
+     * @param type category of command.
+     * @param taskIndex zero-based index of the task.
      */
     public Command(Type type, int taskIndex) {
         this(type, null, taskIndex);

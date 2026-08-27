@@ -24,8 +24,8 @@ public class Storage {
     /**
      * Creates storage that reads from and writes to the given save file path.
      *
-     * @param first first part of the save file path
-     * @param more remaining parts of the save file path
+     * @param first first part of the save file path.
+     * @param more remaining parts of the save file path.
      */
     public Storage(String first, String... more) {
         this.filePath = Path.of(first, more);
@@ -34,8 +34,8 @@ public class Storage {
     /**
      * Saves the current task list to the hard disk.
      *
-     * @param tasks tasks to save
-     * @throws IOException if the file cannot be written
+     * @param tasks tasks to save.
+     * @throws IOException if the file cannot be written.
      */
     public void saveTasks(TaskList tasks) throws IOException {
         Files.createDirectories(filePath.getParent());
@@ -49,11 +49,11 @@ public class Storage {
     }
 
     /**
-     * Loads tasks written in the disk.
+     * Loads tasks written on disk.
      *
-     * @return task lists parsed from disk file.
-     * @throws IOException if the file cannot be read
-     * @throws SophonException if the save file content is invalid
+     * @return task list parsed from the disk file.
+     * @throws IOException if the file cannot be read.
+     * @throws SophonException if the save file content is invalid.
      */
     public TaskList loadTasks() throws IOException, SophonException {
         TaskList tasks = new TaskList();
@@ -76,9 +76,9 @@ public class Storage {
     /**
      * Parses the given tasks from saved tasks in disk.
      *
-     * @param line line from the save file
-     * @return task parsed from text
-     * @throws SophonException if the line does not match the save file format
+     * @param line line from the save file.
+     * @return task parsed from text.
+     * @throws SophonException if the line does not match the save file format.
      */
     private Task parseTask(String line) throws SophonException {
         String[] parts = line.split(" \\| ");
@@ -131,9 +131,9 @@ public class Storage {
     /**
      * Converts text in yyyy-MM-dd format into a date.
      *
-     * @param text date text to convert
-     * @return date represented by the text
-     * @throws SophonException if the text is not in yyyy-MM-dd format
+     * @param text date text to convert.
+     * @return date represented by the text.
+     * @throws SophonException if the text is not in yyyy-MM-dd format.
      */
     private LocalDate convertDate(String text) throws SophonException {
         try {

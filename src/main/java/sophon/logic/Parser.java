@@ -15,9 +15,9 @@ public class Parser {
     /**
      * Parses user input into a command that Sophon can execute.
      *
-     * @param input raw user input
-     * @return parsed command
-     * @throws SophonException if the command is recognized but malformed
+     * @param input raw user input.
+     * @return parsed command.
+     * @throws SophonException if the command is recognized but malformed.
      */
     public static Command parse(String input) throws SophonException {
         if (input.equals("bye")) {
@@ -46,11 +46,11 @@ public class Parser {
     /**
      * Parses a one-based task number from a command and returns its zero-based index.
      *
-     * @param input full user command
-     * @param commandWord command word before the task number
-     * @param missingTaskMessage message to show if the task number is missing
-     * @return zero-based task index
-     * @throws SophonException if the task number is missing or not a numeral
+     * @param input full user command.
+     * @param commandWord command word before the task number.
+     * @param missingTaskMessage message to show if the task number is missing.
+     * @return zero-based task index.
+     * @throws SophonException if the task number is missing or not a numeral.
      */
     public static int parseTaskIndex(String input, String commandWord, String missingTaskMessage)
             throws SophonException {
