@@ -5,8 +5,38 @@ import java.util.Scanner;
  * Entry point for the Sophon chatbot.
  */
 public class Sophon {
-    private static void markTask(TaskList tasks, Storage storage, Ui ui, int taskIndex)
-            throws SophonException, IOException {
+    private final Storage storage;
+    private final TaskList tasks;
+    private final Ui ui;
+    private final String startupWarning;
+
+    /**
+     * Creates a Sophon chatbot that saves tasks at the given path.
+     *
+     * @param first first part of the save file path
+     * @param more remaining parts of the save file path
+     */
+    public Sophon(String first, String... more) {
+        ui = new Ui();
+        storage = new Storage(first, more);
+
+        TaskList loadedTasks;
+        String warning = null;
+        try {
+            loadedTasks = storage.loadTasks();
+        } catch (IOException e) {
+            warning = "I could not read the saved tasks.";
+            loadedTasks = new TaskList();
+        } catch (SophonException e) {
+            warning = e.getMessage();
+            loadedTasks = new TaskList();
+        }
+
+        tasks = loadedTasks;
+        startupWarning = warning;
+    }
+
+    private void markTask(int taskIndex) throws SophonException, IOException {
         if (!tasks.isValidIndex(taskIndex)) {
             throw new SophonException("No task exists at that number.");
         }
@@ -17,8 +47,7 @@ public class Sophon {
                 + "  " + tasks.get(taskIndex));
     }
 
-    private static void unmarkTask(TaskList tasks, Storage storage, Ui ui, int taskIndex)
-            throws SophonException, IOException {
+    private void unmarkTask(int taskIndex) throws SophonException, IOException {
         if (!tasks.isValidIndex(taskIndex)) {
             throw new SophonException("No task exists at that number.");
         }
@@ -29,8 +58,7 @@ public class Sophon {
         ui.showMessage("  " + tasks.get(taskIndex));
     }
 
-    private static void deleteTask(TaskList tasks, Storage storage, Ui ui, int taskIndex)
-            throws SophonException, IOException {
+    private void deleteTask(int taskIndex) throws SophonException, IOException {
         if (!tasks.isValidIndex(taskIndex)) {
             throw new SophonException("No task exists at that number.");
         }
@@ -44,24 +72,8 @@ public class Sophon {
 
     /**
      * Starts the chatbot and handles user commands until the user exits.
-     *
-     * @param args command line arguments, currently unused
      */
-    public static void main(String[] args) {
-        Ui ui = new Ui();
-        Storage storage = new Storage("data", "sophon.txt");
-        TaskList tasks;
-        String startupWarning = null;
-        try {
-            tasks = storage.loadTasks();
-        } catch (IOException e) {
-            startupWarning = "I could not read the saved tasks.";
-            tasks = new TaskList();
-        } catch (SophonException e) {
-            startupWarning = e.getMessage();
-            tasks = new TaskList();
-        }
-
+    public void run() {
         Scanner scanner = new Scanner(System.in);
 
         ui.showGreeting(startupWarning);
@@ -102,13 +114,13 @@ public class Sophon {
                     ui.showMessage(tasks.size() + " tasks are currently under observation.");
                     break;
                 case MARK:
-                    markTask(tasks, storage, ui, command.getTaskIndex());
+                    markTask(command.getTaskIndex());
                     break;
                 case UNMARK:
-                    unmarkTask(tasks, storage, ui, command.getTaskIndex());
+                    unmarkTask(command.getTaskIndex());
                     break;
                 case DELETE:
-                    deleteTask(tasks, storage, ui, command.getTaskIndex());
+                    deleteTask(command.getTaskIndex());
                     break;
                 case UNKNOWN:
                     ui.showMessage("Your message has been observed.\n"
@@ -121,9 +133,18 @@ public class Sophon {
             } catch (SophonException e) {
                 ui.showError(e.getMessage());
             } catch (IOException e) {
-                ui.showError( "I could not save the task list.");
+                ui.showError("I could not save the task list.");
             }
             ui.showLine();
         }
+    }
+
+    /**
+     * Starts Sophon with the default save file location.
+     *
+     * @param args command line arguments, currently unused
+     */
+    public static void main(String[] args) {
+        new Sophon("data", "sophon.txt").run();
     }
 }
