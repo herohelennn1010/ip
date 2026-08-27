@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -44,16 +43,16 @@ public class Sophon {
     public static void main(String[] args) {
         Ui ui = new Ui();
         Storage storage = new Storage("data", "sophon.txt");
-        ArrayList<Task> tasks;
+        TaskList tasks;
         String startupWarning = null;
         try {
             tasks = storage.loadTasks();
         } catch (IOException e) {
             startupWarning = "I could not read the saved tasks.";
-            tasks = new ArrayList<>();
+            tasks = new TaskList();
         } catch (SophonException e) {
             startupWarning = e.getMessage();
-            tasks = new ArrayList<>();
+            tasks = new TaskList();
         }
 
         Scanner scanner = new Scanner(System.in);
@@ -172,7 +171,7 @@ public class Sophon {
                     }
 
                     int taskIndex = taskNumber - 1;
-                    if (taskIndex < 0 || taskIndex >= tasks.size()) {
+                    if (!tasks.isValidIndex(taskIndex)) {
                         throw new SophonException("No task exists at that number.");
                     }
 
@@ -194,7 +193,7 @@ public class Sophon {
                     }
 
                     int taskIndex = taskNumber - 1;
-                    if (taskIndex < 0 || taskIndex >= tasks.size()) {
+                    if (!tasks.isValidIndex(taskIndex)) {
                         throw new SophonException("No task exists at that number.");
                     }
 
@@ -216,7 +215,7 @@ public class Sophon {
                     }
 
                     int taskIndex = taskNumber - 1;
-                    if (taskIndex < 0 || taskIndex >= tasks.size()) {
+                    if (!tasks.isValidIndex(taskIndex)) {
                         throw new SophonException("No task exists at that number.");
                     }
 

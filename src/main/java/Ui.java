@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /**
  * Handles console output shown to the user.
  */
@@ -19,10 +17,6 @@ public class Ui {
 
     public void showIndented(String text) {
         System.out.println(INDENT + text.replace("\n", "\n" + INDENT));
-    }
-
-    public void show(String text) {
-        System.out.println(text);
     }
 
     public void showRaw(String text) {
@@ -59,7 +53,7 @@ public class Ui {
         showIndented(message);
     }
 
-    public void showList(ArrayList<Task> tasks) {
+    public void showList(TaskList tasks) {
         showIndented("Current tasks under observation:");
         for (int i = 0; i < tasks.size(); i++) {
             showIndented((i + 1) + "." + tasks.get(i));

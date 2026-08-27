@@ -7,7 +7,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class Storage {
-    private Path filePath;
+    private final Path filePath;
 
     public Storage(String first, String... more) {
         this.filePath = Path.of(first, more);
@@ -19,12 +19,12 @@ public class Storage {
      * @param tasks tasks to save
      * @throws IOException if the file cannot be written
      */
-    public void saveTasks(ArrayList<Task> tasks) throws IOException {
+    public void saveTasks(TaskList tasks) throws IOException {
         Files.createDirectories(filePath.getParent());
 
         ArrayList<String> lines = new ArrayList<>();
-        for (Task task : tasks) {
-            lines.add(task.toFileString());
+        for (int i = 0; i < tasks.size(); i++) {
+            lines.add(tasks.get(i).toFileString());
         }
 
         Files.write(filePath, lines, StandardCharsets.UTF_8);
@@ -37,8 +37,8 @@ public class Storage {
      * @throws IOException if the file cannot be read
      * @throws SophonException if the save file content is invalid
      */
-    public ArrayList<Task> loadTasks() throws IOException, SophonException {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public TaskList loadTasks() throws IOException, SophonException {
+        TaskList tasks = new TaskList();
 
         if (!Files.exists(filePath)) {
             return tasks;
