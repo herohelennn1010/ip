@@ -1,38 +1,45 @@
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 /**
  * Entry point for the Sophon chatbot.
  */
 public class Sophon {
-
-    /**
-     * Checks whether text can be written safely in the save file format.
-     *
-     * @param text text to check
-     * @throws SophonException if the text contains the file separator
-     */
-    private static void checkFileSafe(String text) throws SophonException {
-        if (text.contains(" | ")) {
-            throw new SophonException("Please do not use \" | \" in task details.");
+    private static void markTask(TaskList tasks, Storage storage, Ui ui, int taskIndex)
+            throws SophonException, IOException {
+        if (!tasks.isValidIndex(taskIndex)) {
+            throw new SophonException("No task exists at that number.");
         }
+
+        tasks.get(taskIndex).markAsDone();
+        storage.saveTasks(tasks);
+        ui.showMessage("Acknowledged. This task is now complete:\n"
+                + "  " + tasks.get(taskIndex));
     }
 
-    /**
-     * Converts text in yyyy-MM-dd format into a date.
-     *
-     * @param text date text to convert
-     * @return date represented by the text
-     * @throws SophonException if the text is not in yyyy-MM-dd format
-     */
-    private static LocalDate convertDate(String text) throws SophonException {
-        try {
-            return LocalDate.parse(text);
-        } catch (DateTimeParseException e) {
-            throw new SophonException("Please enter the date in yyyy-MM-dd format.");
+    private static void unmarkTask(TaskList tasks, Storage storage, Ui ui, int taskIndex)
+            throws SophonException, IOException {
+        if (!tasks.isValidIndex(taskIndex)) {
+            throw new SophonException("No task exists at that number.");
         }
+
+        tasks.get(taskIndex).markAsNotDone();
+        storage.saveTasks(tasks);
+        ui.showMessage("Reverted. This task is once again incomplete:");
+        ui.showMessage("  " + tasks.get(taskIndex));
+    }
+
+    private static void deleteTask(TaskList tasks, Storage storage, Ui ui, int taskIndex)
+            throws SophonException, IOException {
+        if (!tasks.isValidIndex(taskIndex)) {
+            throw new SophonException("No task exists at that number.");
+        }
+
+        Task removedTask = tasks.remove(taskIndex);
+        storage.saveTasks(tasks);
+        ui.showMessage("Removed. This task is no longer under observation:");
+        ui.showMessage("  " + removedTask);
+        ui.showMessage(tasks.size() + " tasks remain under observation.");
     }
 
     /**
@@ -63,135 +70,52 @@ public class Sophon {
             String input = scanner.nextLine();
             ui.showLine();
 
-            if (input.equals("bye")) {
-                ui.showBye();
-                break;
-            }
-
             try {
-                if (input.equals("list")) {
+                Command command = Parser.parse(input);
+
+                switch (command.getType()) {
+                case BYE:
+                    ui.showBye();
+                    return;
+                case LIST:
                     ui.showList(tasks);
-                } else if (input.equals("todo") || input.startsWith("todo ")) {
-                    String description = input.length() == 4 ? "" : input.substring(5).trim();
-                    if (description.isBlank()) {
-                        throw new SophonException("You have given me nothing to observe.\n"
-                                + "A todo requires a description.");
-                    }
-                    checkFileSafe(description);
-                    Todo todo = new Todo(description);
-                    tasks.add(todo);
+                    break;
+                case ADD_TODO:
+                    tasks.add(command.getTask());
                     storage.saveTasks(tasks);
                     ui.showMessage("Recorded. A new task has entered observation:");
-                    ui.showMessage("  " + todo);
+                    ui.showMessage("  " + command.getTask());
                     ui.showMessage(tasks.size() + " tasks are currently under observation.");
-                } else if (input.equals("deadline") || input.startsWith("deadline ")) {
-                    String details = input.length() == 8 ? "" : input.substring(8).trim();
-                    int byIndex = details.indexOf("/by");
-                    if (details.isBlank()) {
-                        throw new SophonException("You have told me neither what must be done nor when.\n"
-                                + "A deadline requires both.");
-                    } else if (byIndex == -1) {
-                        throw new SophonException("I know what must be done, but not when.\n"
-                                + "Specify when it is due using /by.");
-                    }
-                    String description = details.substring(0, byIndex).trim();
-                    String by = details.substring(byIndex + 3).trim();
-                    if (description.isBlank() && by.isBlank()) {
-                        throw new SophonException("You have given me a boundary, but nothing to bind to it.\n"
-                                + "Tell me what must be done, and when.");
-                    } else if (description.isBlank()) {
-                        throw new SophonException("I know when, but not what.\n"
-                                + "Give the deadline a description.");
-                    } else if (by.isBlank()) {
-                        throw new SophonException("I see the task, but its deadline remains unknown.\n"
-                                + "Tell me when it is due.");
-                    }
-                    checkFileSafe(description);
-                    checkFileSafe(by);
-                    LocalDate byTime = convertDate(by);
-
-                    Deadline deadline = new Deadline(description, byTime);
-                    tasks.add(deadline);
+                    break;
+                case ADD_DEADLINE:
+                    tasks.add(command.getTask());
                     storage.saveTasks(tasks);
                     ui.showMessage("Recorded. A new deadline has entered observation:");
-                    ui.showMessage("  " + deadline);
+                    ui.showMessage("  " + command.getTask());
                     ui.showMessage(tasks.size() + " tasks are currently under observation.");
-                } else if (input.equals("event") || input.startsWith("event ")) {
-                    String details = input.length() == 5 ? "" : input.substring(5).trim();
-                    int fromIndex = details.indexOf("/from");
-                    int toIndex = details.indexOf("/to");
-                    if (details.isBlank()) {
-                        throw new SophonException("You have told me neither what will happen nor when.\n"
-                                + "An event requires both.");
-                    } else if (fromIndex == -1 && toIndex == -1) {
-                        throw new SophonException("I know what will happen, but not when.\n"
-                                + "Tell me when it begins and when it ends.");
-                    } else if (fromIndex == -1) {
-                        throw new SophonException("I see when it ends, but not when it begins.\n"
-                                + "Tell me when it begins.");
-                    } else if (toIndex == -1 || toIndex < fromIndex) {
-                        throw new SophonException("I see when it begins, but not when it ends.\n"
-                                + "Specify an end time using /to.");
-                    }
-                    String description = details.substring(0, fromIndex).trim();
-                    String from = details.substring(fromIndex + 5, toIndex).trim();
-                    String to = details.substring(toIndex + 3).trim();
-                    if (description.isBlank()) {
-                        throw new SophonException("I know when, but not what.\n"
-                                + "Give the event a description.");
-                    } else if (from.isBlank()) {
-                        throw new SophonException("I see when it ends, but not when it begins.\n"
-                                + "Tell me when it begins.");
-                    } else if (to.isBlank()) {
-                        throw new SophonException("I see when it begins, but its end remains unknown.\n"
-                                + "Tell me when it ends.");
-                    }
-                    checkFileSafe(description);
-                    checkFileSafe(from);
-                    checkFileSafe(to);
-                    LocalDate fromTime = convertDate(from);
-                    LocalDate toTime = convertDate(to);
-                    Event event = new Event(description, fromTime, toTime);
-                    tasks.add(event);
+                    break;
+                case ADD_EVENT:
+                    tasks.add(command.getTask());
                     storage.saveTasks(tasks);
                     ui.showMessage("Recorded. A new event has entered observation:");
-                    ui.showMessage("  " + event);
+                    ui.showMessage("  " + command.getTask());
                     ui.showMessage(tasks.size() + " tasks are currently under observation.");
-                } else if (input.equals("mark") || input.startsWith("mark ")) {
-                    int taskIndex = Parser.parseTaskIndex(input, "mark",
-                            "Tell me which task has completed its observation.");
-                    if (!tasks.isValidIndex(taskIndex)) {
-                        throw new SophonException("No task exists at that number.");
-                    }
-
-                    tasks.get(taskIndex).markAsDone();
-                    storage.saveTasks(tasks);
-                    ui.showMessage("Acknowledged. This task is now complete:\n"
-                            + "  " + tasks.get(taskIndex));
-                } else if (input.equals("unmark") || input.startsWith("unmark ")) {
-                    int taskIndex = Parser.parseTaskIndex(input, "unmark",
-                            "Tell me which task has returned to observation.");
-                    if (!tasks.isValidIndex(taskIndex)) {
-                        throw new SophonException("No task exists at that number.");
-                    }
-
-                    tasks.get(taskIndex).markAsNotDone();
-                    storage.saveTasks(tasks);
-                    ui.showMessage("Reverted. This task is once again incomplete:");
-                    ui.showMessage("  " + tasks.get(taskIndex));
-                } else if (input.equals("delete") || input.startsWith("delete ")) {
-                    int taskIndex = Parser.parseTaskIndex(input, "delete", "Tell me which task to remove.");
-                    if (!tasks.isValidIndex(taskIndex)) {
-                        throw new SophonException("No task exists at that number.");
-                    }
-
-                    Task removedTask = tasks.remove(taskIndex);
-                    storage.saveTasks(tasks);
-                    ui.showMessage("Removed. This task is no longer under observation:");
-                    ui.showMessage("  " + removedTask);
-                    ui.showMessage(tasks.size() + " tasks remain under observation.");
-                } else {
+                    break;
+                case MARK:
+                    markTask(tasks, storage, ui, command.getTaskIndex());
+                    break;
+                case UNMARK:
+                    unmarkTask(tasks, storage, ui, command.getTaskIndex());
+                    break;
+                case DELETE:
+                    deleteTask(tasks, storage, ui, command.getTaskIndex());
+                    break;
+                case UNKNOWN:
                     ui.showMessage("Your message has been observed.\n"
+                            + "Its meaning, however, remains unknown.");
+                    break;
+                default:
+                    throw new SophonException("Your message has been observed.\n"
                             + "Its meaning, however, remains unknown.");
                 }
             } catch (SophonException e) {
