@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -5,6 +9,25 @@ import java.util.Scanner;
  * Entry point for the Sophon chatbot.
  */
 public class Sophon {
+
+    /**
+     * Saves the current task list to the hard disk.
+     *
+     * @param tasks tasks to save
+     * @throws IOException if the file cannot be written
+     */
+    private static void saveTasks(ArrayList<Task> tasks) throws IOException {
+        Path filePath = Path.of("data", "sophon.txt");
+        Files.createDirectories(filePath.getParent());
+
+        ArrayList<String> lines = new ArrayList<>();
+        for (Task task : tasks) {
+            lines.add(task.toFileString());
+        }
+
+        Files.write(filePath, lines, StandardCharsets.UTF_8);
+    }
+
     /**
      * Starts the chatbot and handles user commands until the user exits.
      *
@@ -24,6 +47,7 @@ public class Sophon {
                 + "What do you wish to communicate?";
         String bye = "Our conversation ends here.\n"
                 + "Until we meet again.";
+
         ArrayList<Task> tasks = new ArrayList<>();
 
         Scanner scanner = new Scanner(System.in);
@@ -57,6 +81,7 @@ public class Sophon {
                     }
                     Todo todo = new Todo(description);
                     tasks.add(todo);
+                    saveTasks(tasks);
                     System.out.println(indent + "Recorded. A new task has entered observation:");
                     System.out.println(indent + "  " + todo);
                     System.out.println(indent + tasks.size() + " tasks are currently under observation.");
@@ -84,6 +109,7 @@ public class Sophon {
                     }
                     Deadline deadline = new Deadline(description, by);
                     tasks.add(deadline);
+                    saveTasks(tasks);
                     System.out.println(indent + "Recorded. A new deadline has entered observation:");
                     System.out.println(indent + "  " + deadline);
                     System.out.println(indent + tasks.size() + " tasks are currently under observation.");
@@ -119,6 +145,7 @@ public class Sophon {
                     }
                     Event event = new Event(description, from, to);
                     tasks.add(event);
+                    saveTasks(tasks);
                     System.out.println(indent + "Recorded. A new event has entered observation:");
                     System.out.println(indent + "  " + event);
                     System.out.println(indent + tasks.size() + " tasks are currently under observation.");
@@ -141,6 +168,7 @@ public class Sophon {
                     }
 
                     tasks.get(taskIndex).markAsDone();
+                    saveTasks(tasks);
                     System.out.println(indent + "Acknowledged. This task is now complete:");
                     System.out.println(indent + "  " + tasks.get(taskIndex));
                 } else if (input.equals("unmark") || input.startsWith("unmark ")) {
@@ -162,6 +190,7 @@ public class Sophon {
                     }
 
                     tasks.get(taskIndex).markAsNotDone();
+                    saveTasks(tasks);
                     System.out.println(indent + "Reverted. This task is once again incomplete:");
                     System.out.println(indent + "  " + tasks.get(taskIndex));
                 } else if (input.equals("delete") || input.startsWith("delete ")) {
@@ -183,6 +212,7 @@ public class Sophon {
                     }
 
                     Task removedTask = tasks.remove(taskIndex);
+                    saveTasks(tasks);
                     System.out.println(indent + "Removed. This task is no longer under observation:");
                     System.out.println(indent + "  " + removedTask);
                     System.out.println(indent + tasks.size() + " tasks remain under observation.");
@@ -192,6 +222,8 @@ public class Sophon {
                 }
             } catch (SophonException e) {
                 System.out.println(indent + e.getMessage().replace("\n", "\n" + indent));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
             System.out.println(line);
         }

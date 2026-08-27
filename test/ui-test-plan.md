@@ -385,3 +385,63 @@ ____________________________________________________________
      Until we meet again.
 ____________________________________________________________
 ```
+
+### TC-06: Save tasks after changes
+
+Aim: Verify that Sophon writes the latest task list to `data\sophon.txt` after add, mark, and delete commands.
+
+Command:
+```text
+powershell -NoProfile -Command "$commands = @('todo read book', 'deadline return book /by Sunday', 'event project meeting /from Mon 2pm /to 4pm', 'mark 1', 'delete 2', 'bye') -join [Environment]::NewLine; Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon; 'SAVED FILE:'; Get-Content -LiteralPath 'data\sophon.txt'"
+```
+
+Inputs:
+```text
+
+```
+
+Expected output:
+```text
+____________________________________________________________
+ ____              _
+/ ___|  ___  _ __ | |__   ___  _ __
+\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
+ ___) | (_) | |_) | | | | (_) | | | |
+|____/ \___/| .__/|_| |_|\___/|_| |_|
+            |_|
+     你好! I'm Sophon.
+     I'm listening.
+     What do you wish to communicate?
+____________________________________________________________
+____________________________________________________________
+     Recorded. A new task has entered observation:
+       [T][ ] read book
+     1 tasks are currently under observation.
+____________________________________________________________
+____________________________________________________________
+     Recorded. A new deadline has entered observation:
+       [D][ ] return book (by: Sunday)
+     2 tasks are currently under observation.
+____________________________________________________________
+____________________________________________________________
+     Recorded. A new event has entered observation:
+       [E][ ] project meeting (from: Mon 2pm to: 4pm)
+     3 tasks are currently under observation.
+____________________________________________________________
+____________________________________________________________
+     Acknowledged. This task is now complete:
+       [T][X] read book
+____________________________________________________________
+____________________________________________________________
+     Removed. This task is no longer under observation:
+       [D][ ] return book (by: Sunday)
+     2 tasks remain under observation.
+____________________________________________________________
+____________________________________________________________
+     Our conversation ends here.
+     Until we meet again.
+____________________________________________________________
+SAVED FILE:
+T | 1 | read book
+E | 0 | project meeting | Mon 2pm | 4pm
+```

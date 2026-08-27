@@ -50,4 +50,13 @@ public class Task {
     public String toString() {
         return "[" + type.getIcon() + "][" + getStatusIcon() + "] " + description;
     }
+
+    /**
+     * Returns the string format for writing to a file.
+     *
+     * @return file string format
+     */
+    public String toFileString() {
+        return "T | " + (isDone ? "1" : "0") + " | " + description;
+    }
 }
