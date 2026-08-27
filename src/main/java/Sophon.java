@@ -29,11 +29,51 @@ public class Sophon {
     }
 
     /**
+     * Loads the task list from disk.
+     *
+     * @return task list loaded
+     * @throws IOException if the file cannot be read
+     */
+    private static ArrayList<Task> loadTasks() throws IOException {
+        Path filePath = Path.of("data", "sophon.txt");
+        ArrayList<Task> tasks = new ArrayList<>();
+
+        if (!Files.exists(filePath)) {
+            return tasks;
+        }
+
+        for (String line : Files.readAllLines(filePath, StandardCharsets.UTF_8)) {
+            String[] parts = line.split(" \\| ");
+
+            String type = parts[0];
+            boolean isDone = parts[1].equals("1");
+            String description = parts[2];
+
+            Task task;
+            if (type.equals("T")) {
+                task = new Todo(description);
+            } else if (type.equals("D")) {
+                task = new Deadline(description, parts[3]);
+            } else {
+                task = new Event(description, parts[3], parts[4]);
+            }
+
+            if (isDone) {
+                task.markAsDone();
+            }
+
+            tasks.add(task);
+        }
+
+        return tasks;
+    }
+
+    /**
      * Starts the chatbot and handles user commands until the user exits.
      *
      * @param args command line arguments, currently unused
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         String indent = "     ";
         String line = "____________________________________________________________";
         String banner = " ____              _                 \n"
@@ -48,7 +88,7 @@ public class Sophon {
         String bye = "Our conversation ends here.\n"
                 + "Until we meet again.";
 
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks = loadTasks();
 
         Scanner scanner = new Scanner(System.in);
 

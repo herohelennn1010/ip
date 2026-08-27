@@ -12,7 +12,7 @@ Aim: Verify that Sophon greets the user and exits cleanly when the user enters `
 
 Command:
 ```text
-java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -cp out\ui-test Sophon
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
 ```
 
 Inputs:
@@ -45,7 +45,7 @@ Aim: Verify that Sophon records all three task types and displays them in the ta
 
 Command:
 ```text
-java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -cp out\ui-test Sophon
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
 ```
 
 Inputs:
@@ -103,7 +103,7 @@ Aim: Verify that Sophon does not crash on malformed typed commands, rejects task
 
 Command:
 ```text
-java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -cp out\ui-test Sophon
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
 ```
 
 Inputs:
@@ -222,7 +222,7 @@ Aim: Verify that Sophon removes the requested task, keeps the remaining tasks li
 
 Command:
 ```text
-java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -cp out\ui-test Sophon
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
 ```
 
 Inputs:
@@ -298,7 +298,7 @@ Aim: Verify that Sophon marks and unmarks valid tasks, and explains invalid mark
 
 Command:
 ```text
-java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -cp out\ui-test Sophon
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
 ```
 
 Inputs:
@@ -444,4 +444,43 @@ ____________________________________________________________
 SAVED FILE:
 T | 1 | read book
 E | 0 | project meeting | Mon 2pm | 4pm
+```
+
+### TC-07: Load tasks on startup
+
+Aim: Verify that Sophon loads todos, deadlines, and events from `data\sophon.txt` when it starts.
+
+Command:
+```text
+powershell -NoProfile -Command "New-Item -ItemType Directory -Force -Path data | Out-Null; [System.IO.File]::WriteAllLines('data\sophon.txt', [string[]]@('T | 1 | read book', 'D | 0 | return book | Sunday', 'E | 0 | project meeting | Mon 2pm | 4pm'), [System.Text.UTF8Encoding]::new($false)); $commands = @('list', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
+```
+
+Inputs:
+```text
+
+```
+
+Expected output:
+```text
+____________________________________________________________
+ ____              _
+/ ___|  ___  _ __ | |__   ___  _ __
+\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
+ ___) | (_) | |_) | | | | (_) | | | |
+|____/ \___/| .__/|_| |_|\___/|_| |_|
+            |_|
+     你好! I'm Sophon.
+     I'm listening.
+     What do you wish to communicate?
+____________________________________________________________
+____________________________________________________________
+     Current tasks under observation:
+     1.[T][X] read book
+     2.[D][ ] return book (by: Sunday)
+     3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+____________________________________________________________
+____________________________________________________________
+     Our conversation ends here.
+     Until we meet again.
+____________________________________________________________
 ```
