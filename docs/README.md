@@ -1,20 +1,24 @@
 # Sophon User Guide
 
-Sophon is a command-line chatbot that stores tasks typed by the user, marks
-or unmarks them, and lists them when requested.
+Sophon is a command-line chatbot that helps you track todos, deadlines, and
+events. It saves your task list automatically, so your tasks are still there
+the next time you start the chatbot from the same project folder.
 
-## Adding Normal Tasks
+## Quick Start
 
-Type a task and press Enter. Sophon stores it as a normal task in memory for
-the current session.
+Run Sophon, type one command at a time, and press Enter after each command.
 
-Example:
+Common commands:
 
 ```text
-read book
-    ____________________________________________________________
-     added: read book
-    ____________________________________________________________
+todo read book
+deadline return book /by Sunday
+event project meeting /from Mon 2pm /to 4pm
+list
+mark 1
+unmark 1
+delete 1
+bye
 ```
 
 ## Adding ToDos
@@ -32,6 +36,8 @@ todo borrow book
     ____________________________________________________________
 ```
 
+Sophon rejects a todo if the description is missing.
+
 ## Adding Deadlines
 
 Type `deadline`, followed by the task description, `/by`, and the deadline.
@@ -47,6 +53,9 @@ deadline return book /by Sunday
      1 tasks are currently under observation.
     ____________________________________________________________
 ```
+
+Sophon rejects a deadline if the description, `/by`, or deadline time is
+missing.
 
 ## Adding Events
 
@@ -64,6 +73,8 @@ event project meeting /from Mon 2pm /to 4pm
     ____________________________________________________________
 ```
 
+Sophon rejects an event if the description, start time, or end time is missing.
+
 ## Listing Tasks
 
 Type `list` and press Enter to view the tasks added so far.
@@ -74,10 +85,9 @@ Example:
 list
     ____________________________________________________________
      Current tasks under observation:
-     1.[ ] read book
-     2.[T][ ] borrow book
-     3.[D][ ] return book (by: Sunday)
-     4.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+     1.[T][ ] borrow book
+     2.[D][ ] return book (by: Sunday)
+     3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
     ____________________________________________________________
 ```
 
@@ -103,6 +113,56 @@ unmark 2
     ____________________________________________________________
      Reverted. This task is once again incomplete:
        [T][ ] borrow book
+    ____________________________________________________________
+```
+
+## Deleting Tasks
+
+Type `delete` followed by a task number to remove that task.
+
+Example:
+
+```text
+delete 2
+    ____________________________________________________________
+     Removed. This task is no longer under observation:
+       [D][ ] return book (by: Sunday)
+     2 tasks remain under observation.
+    ____________________________________________________________
+```
+
+## Saving and Loading
+
+Sophon saves the task list automatically after you add, mark, unmark, or delete
+a task. The save file is stored at `data/sophon.txt` relative to the project
+folder.
+
+If the save file or `data` folder does not exist yet, Sophon starts normally.
+The folder and file are created automatically the first time Sophon saves your
+tasks.
+
+Do not type ` | ` inside task details, because Sophon uses that separator in
+the save file.
+
+## Handling Mistakes
+
+If Sophon cannot understand a command or a command is missing required details,
+it shows an explanation instead of crashing.
+
+Examples:
+
+```text
+todo
+    ____________________________________________________________
+     You have given me nothing to observe.
+     A todo requires a description.
+    ____________________________________________________________
+```
+
+```text
+mark abc
+    ____________________________________________________________
+     Task numbers must be written as numerals.
     ____________________________________________________________
 ```
 

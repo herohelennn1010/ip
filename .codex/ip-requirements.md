@@ -3,9 +3,10 @@
 This is the living project guide for assistant work in this repository.
 Before making future project changes, check this file and update it when the course pages change.
 
-Source checked: 2026-08-20
+Source checked: 2026-08-27
 Primary source: https://nus-cs2103-ay2627-s1.github.io/website/admin/ip-w2.html
 Related source: https://nus-cs2103-ay2627-s1.github.io/website/admin/ip-grading.html
+Standards source: https://nus-cs2103-ay2627-s1.github.io/website/admin/standardsAndConventions.html
 
 ## Always Remember
 
@@ -57,6 +58,46 @@ Week 2 implementation increments, in order:
 - Remember that Git does not push tags automatically.
 - Do not commit generated `.class` files or other build outputs.
 - If a bug is found after an increment is tagged, fix it in a later commit rather than rewriting published history unless the user explicitly chooses otherwise.
+
+## Standards and Conventions
+
+The course standards page says the following are required unless a more specific course instruction overrides them.
+
+Java:
+
+- Follow the basic and intermediate rules in the SE-EDU Java coding standard: https://se-education.org/guides/conventions/java/intermediate.html
+- For Java topics not covered by the SE-EDU standard, use the Google Java style guide as fallback guidance.
+- Use lower-case package names based on the project name and logical groups; do not use `edu.nus.comp.*` or similar NUS-owned package names.
+- Use `PascalCase` nouns for classes/enums, `camelCase` verbs for methods, `camelCase` for variables, and `SCREAMING_SNAKE_CASE` for constants.
+- Name booleans so they read like booleans, normally with prefixes such as `is`, `has`, `was`, `can`, or `should`.
+- Use 4 spaces for indentation, no tabs.
+- Keep Java lines within the 120-character hard limit, aiming below 110 characters when practical.
+- Use K&R brace style, with opening braces on the same line.
+- Always use braces for loop and conditional bodies, even for single statements.
+- Put every class in a package.
+- Keep imports explicit; do not use wildcard imports such as `java.util.*`.
+- Declare variables in the smallest reasonable scope and initialize them where they are declared when possible.
+- Do not expose public class variables unless the class is a behavior-free data class; prefer encapsulation.
+- Write comments in English, using American spelling and avoiding local slang.
+- Write descriptive Javadoc/header comments for all classes and public methods, except simple getters/setters, exact inherited overrides, and test classes/methods.
+- Keep comments useful and aligned with the code structure; avoid commented-out code.
+
+Git:
+
+- Follow the SE-EDU Git commit message subject conventions: https://se-education.org/guides/conventions/git.html
+- Keep commit subjects ideally within 50 characters and never above 72 characters.
+- Write commit subjects in imperative mood, capitalize the first letter, and do not end with a period.
+- A subject may include a useful `<scope>:` or `<category>:` prefix, such as `Parser: Handle empty input` or `bug fix: Trim task names`.
+- For non-trivial commits, include a body separated from the subject by a blank line.
+- In commit bodies, wrap at 72 characters, use paragraphs or bullets as useful, and explain what changed and why rather than restating how the diff works.
+- Use meaningful branch names in kebab case, such as `refactor-ui-tests`; for issue-related branches, prefer `issueNumber-some-keywords`.
+
+Markdown and documentation:
+
+- The SE-EDU Markdown style guide is optional but useful for project documentation: https://se-education.org/guides/conventions/markdown.html
+- The Google developer documentation style guide is optional; when using it, follow project-specific/course guidance first, then the Google guide.
+- For Markdown, prefer strict GitHub Flavored Markdown so GitHub Pages renders documentation reliably.
+- Keep documentation clear and consistent for the iP's users and reviewers.
 
 ## Grading Bars
 

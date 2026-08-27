@@ -2,8 +2,13 @@
  * Represents a task tracked by Sophon.
  */
 public class Task {
+    /** Details of the task shown to the user and saved to disk. */
     protected String description;
+
+    /** Whether the task has been marked as completed. */
     protected boolean isDone;
+
+    /** Category of task, used to choose the display icon. */
     private final TaskType type;
 
     /**
@@ -49,5 +54,14 @@ public class Task {
     @Override
     public String toString() {
         return "[" + type.getIcon() + "][" + getStatusIcon() + "] " + description;
+    }
+
+    /**
+     * Returns this task in the format used by the save file.
+     *
+     * @return save file representation of this task
+     */
+    public String toFileString() {
+        return "T | " + (isDone ? "1" : "0") + " | " + description;
     }
 }
