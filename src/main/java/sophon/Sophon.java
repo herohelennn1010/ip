@@ -102,6 +102,9 @@ public class Sophon {
                 case LIST:
                     ui.showList(tasks);
                     break;
+                case FIND:
+                    ui.showMatchingTasks(tasks.find(command.getKeyword()));
+                    break;
                 case ADD_TODO:
                     tasks.add(command.getTask());
                     storage.saveTasks(tasks);

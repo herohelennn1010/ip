@@ -30,4 +30,19 @@ public class ParserTest {
 
         assertEquals("Task numbers must be written as numerals.", exception.getMessage());
     }
+
+    @Test
+    public void parse_findCommand_returnsFindCommandWithKeyword() throws SophonException {
+        Command command = Parser.parse("find book");
+
+        assertEquals(Command.Type.FIND, command.getType());
+        assertEquals("book", command.getKeyword());
+    }
+
+    @Test
+    public void parse_findCommandWithoutKeyword_throwsException() {
+        SophonException exception = assertThrows(SophonException.class, () -> Parser.parse("find"));
+
+        assertEquals("Tell me what signal to search for.", exception.getMessage());
+    }
 }

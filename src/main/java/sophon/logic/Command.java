@@ -12,6 +12,7 @@ public class Command {
     public enum Type {
         BYE,
         LIST,
+        FIND,
         ADD_TODO,
         ADD_DEADLINE,
         ADD_EVENT,
@@ -24,6 +25,7 @@ public class Command {
     private final Type type;
     private final Task task;
     private final int taskIndex;
+    private final String keyword;
 
     /**
      * Creates a command without extra data.
@@ -31,7 +33,7 @@ public class Command {
      * @param type category of command
      */
     public Command(Type type) {
-        this(type, null, -1);
+        this(type, null, -1, null);
     }
 
     /**
@@ -41,7 +43,7 @@ public class Command {
      * @param task task carried by the command
      */
     public Command(Type type, Task task) {
-        this(type, task, -1);
+        this(type, task, -1, null);
     }
 
     /**
@@ -51,13 +53,24 @@ public class Command {
      * @param taskIndex zero-based index of the task
      */
     public Command(Type type, int taskIndex) {
-        this(type, null, taskIndex);
+        this(type, null, taskIndex, null);
     }
 
-    private Command(Type type, Task task, int taskIndex) {
+    /**
+     * Creates a command that carries a keyword.
+     *
+     * @param type category of command
+     * @param keyword keyword carried by the command
+     */
+    public Command(Type type, String keyword) {
+        this(type, null, -1, keyword);
+    }
+
+    private Command(Type type, Task task, int taskIndex, String keyword) {
         this.type = type;
         this.task = task;
         this.taskIndex = taskIndex;
+        this.keyword = keyword;
     }
 
     public Type getType() {
@@ -70,5 +83,9 @@ public class Command {
 
     public int getTaskIndex() {
         return taskIndex;
+    }
+
+    public String getKeyword() {
+        return keyword;
     }
 }

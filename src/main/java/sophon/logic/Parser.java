@@ -24,6 +24,8 @@ public class Parser {
             return new Command(Command.Type.BYE);
         } else if (input.equals("list")) {
             return new Command(Command.Type.LIST);
+        } else if (input.equals("find") || input.startsWith("find ")) {
+            return new Command(Command.Type.FIND, parseKeyword(input));
         } else if (input.equals("todo") || input.startsWith("todo ")) {
             return new Command(Command.Type.ADD_TODO, parseTodo(input));
         } else if (input.equals("deadline") || input.startsWith("deadline ")) {
@@ -64,6 +66,15 @@ public class Parser {
         } catch (NumberFormatException e) {
             throw new SophonException("Task numbers must be written as numerals.");
         }
+    }
+
+    private static String parseKeyword(String input) throws SophonException {
+        String keyword = input.substring("find".length()).trim();
+        if (keyword.isBlank()) {
+            throw new SophonException("Tell me what signal to search for.");
+        }
+
+        return keyword;
     }
 
     private static Todo parseTodo(String input) throws SophonException {
