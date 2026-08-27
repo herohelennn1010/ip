@@ -158,41 +158,19 @@ public class Sophon {
                     ui.showMessage("  " + event);
                     ui.showMessage(tasks.size() + " tasks are currently under observation.");
                 } else if (input.equals("mark") || input.startsWith("mark ")) {
-                    String taskNumberText = input.length() == 4 ? "" : input.substring(5).trim();
-                    if (taskNumberText.isBlank()) {
-                        throw new SophonException("Tell me which task has completed its observation.");
-                    }
-
-                    int taskNumber;
-                    try {
-                        taskNumber = Integer.parseInt(taskNumberText);
-                    } catch (NumberFormatException e) {
-                        throw new SophonException("Task numbers must be written as numerals.");
-                    }
-
-                    int taskIndex = taskNumber - 1;
+                    int taskIndex = Parser.parseTaskIndex(input, "mark",
+                            "Tell me which task has completed its observation.");
                     if (!tasks.isValidIndex(taskIndex)) {
                         throw new SophonException("No task exists at that number.");
                     }
 
                     tasks.get(taskIndex).markAsDone();
                     storage.saveTasks(tasks);
-                    ui.showMessage("Acknowledged. This task is now complete:");
-                    ui.showMessage("  " + tasks.get(taskIndex));
+                    ui.showMessage("Acknowledged. This task is now complete:\n"
+                            + "  " + tasks.get(taskIndex));
                 } else if (input.equals("unmark") || input.startsWith("unmark ")) {
-                    String taskNumberText = input.length() == 6 ? "" : input.substring(7).trim();
-                    if (taskNumberText.isBlank()) {
-                        throw new SophonException("Tell me which task has returned to observation.");
-                    }
-
-                    int taskNumber;
-                    try {
-                        taskNumber = Integer.parseInt(taskNumberText);
-                    } catch (NumberFormatException e) {
-                        throw new SophonException("Task numbers must be written as numerals.");
-                    }
-
-                    int taskIndex = taskNumber - 1;
+                    int taskIndex = Parser.parseTaskIndex(input, "unmark",
+                            "Tell me which task has returned to observation.");
                     if (!tasks.isValidIndex(taskIndex)) {
                         throw new SophonException("No task exists at that number.");
                     }
@@ -202,19 +180,7 @@ public class Sophon {
                     ui.showMessage("Reverted. This task is once again incomplete:");
                     ui.showMessage("  " + tasks.get(taskIndex));
                 } else if (input.equals("delete") || input.startsWith("delete ")) {
-                    String taskNumberText = input.length() == 6 ? "" : input.substring(7).trim();
-                    if (taskNumberText.isBlank()) {
-                        throw new SophonException("Tell me which task to remove.");
-                    }
-
-                    int taskNumber;
-                    try {
-                        taskNumber = Integer.parseInt(taskNumberText);
-                    } catch (NumberFormatException e) {
-                        throw new SophonException("Task numbers must be written as numerals.");
-                    }
-
-                    int taskIndex = taskNumber - 1;
+                    int taskIndex = Parser.parseTaskIndex(input, "delete", "Tell me which task to remove.");
                     if (!tasks.isValidIndex(taskIndex)) {
                         throw new SophonException("No task exists at that number.");
                     }
