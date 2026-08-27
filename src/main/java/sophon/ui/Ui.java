@@ -99,4 +99,11 @@ public class Ui {
             showIndented((i + 1) + "." + tasks.get(i));
         }
     }
+
+    public void showMatchingTasks(TaskList tasks) {
+        showIndented("These signals match your search:");
+        for (int i = 0; i < tasks.size(); i++) {
+            showIndented((i + 1) + "." + tasks.get(i));
+        }
+    }
 }

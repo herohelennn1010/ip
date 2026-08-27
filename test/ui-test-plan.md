@@ -606,3 +606,68 @@ ____________________________________________________________
      Until we meet again.
 ____________________________________________________________
 ```
+
+### TC-11: Find tasks by keyword
+
+Aim: Verify that Sophon lists tasks whose descriptions contain the given keyword and explains a missing keyword.
+
+Command:
+```text
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
+```
+
+Inputs:
+```text
+todo read book
+deadline return book /by 2019-10-15
+event project meeting /from 2019-10-15 /to 2019-10-16
+find book
+find missing
+find
+bye
+```
+
+Expected output:
+```text
+____________________________________________________________
+ ____              _
+/ ___|  ___  _ __ | |__   ___  _ __
+\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
+ ___) | (_) | |_) | | | | (_) | | | |
+|____/ \___/| .__/|_| |_|\___/|_| |_|
+            |_|
+     你好! I'm Sophon.
+     I'm listening.
+     What do you wish to communicate?
+____________________________________________________________
+____________________________________________________________
+     Recorded. A new task has entered observation:
+       [T][ ] read book
+     1 tasks are currently under observation.
+____________________________________________________________
+____________________________________________________________
+     Recorded. A new deadline has entered observation:
+       [D][ ] return book (by: Oct 15 2019)
+     2 tasks are currently under observation.
+____________________________________________________________
+____________________________________________________________
+     Recorded. A new event has entered observation:
+       [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
+     3 tasks are currently under observation.
+____________________________________________________________
+____________________________________________________________
+     These signals match your search:
+     1.[T][ ] read book
+     2.[D][ ] return book (by: Oct 15 2019)
+____________________________________________________________
+____________________________________________________________
+     These signals match your search:
+____________________________________________________________
+____________________________________________________________
+     Tell me what signal to search for.
+____________________________________________________________
+____________________________________________________________
+     Our conversation ends here.
+     Until we meet again.
+____________________________________________________________
+```

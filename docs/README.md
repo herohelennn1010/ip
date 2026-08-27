@@ -15,6 +15,7 @@ todo read book
 deadline return book /by 2019-10-15
 event project meeting /from 2019-10-15 /to 2019-10-16
 list
+find book
 mark 1
 unmark 1
 delete 1
@@ -89,6 +90,22 @@ list
      1.[T][ ] borrow book
      2.[D][ ] return book (by: Oct 15 2019)
      3.[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
+    ____________________________________________________________
+```
+
+## Finding Tasks
+
+Type `find`, followed by a keyword, to view tasks whose descriptions contain
+that keyword.
+
+Example:
+
+```text
+find book
+    ____________________________________________________________
+     These signals match your search:
+     1.[T][ ] borrow book
+     2.[D][ ] return book (by: Oct 15 2019)
     ____________________________________________________________
 ```
 
