@@ -11,7 +11,6 @@ import java.util.Scanner;
  * Entry point for the Sophon chatbot.
  */
 public class Sophon {
-
     /**
      * Saves the current task list to the hard disk.
      *
@@ -144,20 +143,7 @@ public class Sophon {
      * @param args command line arguments, currently unused
      */
     public static void main(String[] args) {
-        String indent = "     ";
-        String line = "____________________________________________________________";
-        String banner = " ____              _                 \n"
-                + "/ ___|  ___  _ __ | |__   ___  _ __ \n"
-                + "\\___ \\ / _ \\| '_ \\| '_ \\ / _ \\| '_ \\\n"
-                + " ___) | (_) | |_) | | | | (_) | | | |\n"
-                + "|____/ \\___/| .__/|_| |_|\\___/|_| |_|\n"
-                + "            |_|                       \n";
-        String greeting = "你好! I'm Sophon.\n"
-                + "I'm listening.\n"
-                + "What do you wish to communicate?";
-        String bye = "Our conversation ends here.\n"
-                + "Until we meet again.";
-
+        Ui ui = new Ui();
         ArrayList<Task> tasks;
         String startupWarning = null;
         try {
@@ -172,30 +158,20 @@ public class Sophon {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println(line);
-        System.out.print(banner);
-        System.out.println(indent + greeting.replace("\n", "\n" + indent));
-        if (startupWarning != null) {
-            System.out.println(indent + startupWarning);
-        }
-        System.out.println(line);
+        ui.showGreeting(startupWarning);
+
         while (true) {
             String input = scanner.nextLine();
-
-            System.out.println(line);
+            ui.showLine();
 
             if (input.equals("bye")) {
-                System.out.println(indent + bye.replace("\n","\n" + indent));
-                System.out.println(line);
+                ui.showBye();
                 break;
             }
 
             try {
                 if (input.equals("list")) {
-                    System.out.println(indent + "Current tasks under observation:");
-                    for (int i = 0; i < tasks.size(); i++) {
-                        System.out.println(indent + (i + 1) + "." + tasks.get(i));
-                    }
+                    ui.showList(tasks);
                 } else if (input.equals("todo") || input.startsWith("todo ")) {
                     String description = input.length() == 4 ? "" : input.substring(5).trim();
                     if (description.isBlank()) {
@@ -206,9 +182,9 @@ public class Sophon {
                     Todo todo = new Todo(description);
                     tasks.add(todo);
                     saveTasks(tasks);
-                    System.out.println(indent + "Recorded. A new task has entered observation:");
-                    System.out.println(indent + "  " + todo);
-                    System.out.println(indent + tasks.size() + " tasks are currently under observation.");
+                    ui.showMessage("Recorded. A new task has entered observation:");
+                    ui.showMessage("  " + todo);
+                    ui.showMessage(tasks.size() + " tasks are currently under observation.");
                 } else if (input.equals("deadline") || input.startsWith("deadline ")) {
                     String details = input.length() == 8 ? "" : input.substring(8).trim();
                     int byIndex = details.indexOf("/by");
@@ -238,9 +214,9 @@ public class Sophon {
                     Deadline deadline = new Deadline(description, byTime);
                     tasks.add(deadline);
                     saveTasks(tasks);
-                    System.out.println(indent + "Recorded. A new deadline has entered observation:");
-                    System.out.println(indent + "  " + deadline);
-                    System.out.println(indent + tasks.size() + " tasks are currently under observation.");
+                    ui.showMessage("Recorded. A new deadline has entered observation:");
+                    ui.showMessage("  " + deadline);
+                    ui.showMessage(tasks.size() + " tasks are currently under observation.");
                 } else if (input.equals("event") || input.startsWith("event ")) {
                     String details = input.length() == 5 ? "" : input.substring(5).trim();
                     int fromIndex = details.indexOf("/from");
@@ -279,9 +255,9 @@ public class Sophon {
                     Event event = new Event(description, fromTime, toTime);
                     tasks.add(event);
                     saveTasks(tasks);
-                    System.out.println(indent + "Recorded. A new event has entered observation:");
-                    System.out.println(indent + "  " + event);
-                    System.out.println(indent + tasks.size() + " tasks are currently under observation.");
+                    ui.showMessage("Recorded. A new event has entered observation:");
+                    ui.showMessage("  " + event);
+                    ui.showMessage(tasks.size() + " tasks are currently under observation.");
                 } else if (input.equals("mark") || input.startsWith("mark ")) {
                     String taskNumberText = input.length() == 4 ? "" : input.substring(5).trim();
                     if (taskNumberText.isBlank()) {
@@ -302,8 +278,8 @@ public class Sophon {
 
                     tasks.get(taskIndex).markAsDone();
                     saveTasks(tasks);
-                    System.out.println(indent + "Acknowledged. This task is now complete:");
-                    System.out.println(indent + "  " + tasks.get(taskIndex));
+                    ui.showMessage("Acknowledged. This task is now complete:");
+                    ui.showMessage("  " + tasks.get(taskIndex));
                 } else if (input.equals("unmark") || input.startsWith("unmark ")) {
                     String taskNumberText = input.length() == 6 ? "" : input.substring(7).trim();
                     if (taskNumberText.isBlank()) {
@@ -324,8 +300,8 @@ public class Sophon {
 
                     tasks.get(taskIndex).markAsNotDone();
                     saveTasks(tasks);
-                    System.out.println(indent + "Reverted. This task is once again incomplete:");
-                    System.out.println(indent + "  " + tasks.get(taskIndex));
+                    ui.showMessage("Reverted. This task is once again incomplete:");
+                    ui.showMessage("  " + tasks.get(taskIndex));
                 } else if (input.equals("delete") || input.startsWith("delete ")) {
                     String taskNumberText = input.length() == 6 ? "" : input.substring(7).trim();
                     if (taskNumberText.isBlank()) {
@@ -346,19 +322,19 @@ public class Sophon {
 
                     Task removedTask = tasks.remove(taskIndex);
                     saveTasks(tasks);
-                    System.out.println(indent + "Removed. This task is no longer under observation:");
-                    System.out.println(indent + "  " + removedTask);
-                    System.out.println(indent + tasks.size() + " tasks remain under observation.");
+                    ui.showMessage("Removed. This task is no longer under observation:");
+                    ui.showMessage("  " + removedTask);
+                    ui.showMessage(tasks.size() + " tasks remain under observation.");
                 } else {
-                    System.out.println(indent + "Your message has been observed.\n"
-                            + indent + "Its meaning, however, remains unknown.");
+                    ui.showMessage("Your message has been observed.\n"
+                            + "Its meaning, however, remains unknown.");
                 }
             } catch (SophonException e) {
-                System.out.println(indent + e.getMessage().replace("\n", "\n" + indent));
+                ui.showError(e.getMessage());
             } catch (IOException e) {
-                System.out.println(indent + "I could not save the task list.");
+                ui.showError( "I could not save the task list.");
             }
-            System.out.println(line);
+            ui.showLine();
         }
     }
 }
