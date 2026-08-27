@@ -23,8 +23,8 @@ public class Sophon {
     /**
      * Creates a Sophon chatbot that saves tasks at the given path.
      *
-     * @param first first part of the save file path
-     * @param more remaining parts of the save file path
+     * @param first first part of the save file path.
+     * @param more remaining parts of the save file path.
      */
     public Sophon(String first, String... more) {
         ui = new Ui();
@@ -152,7 +152,7 @@ public class Sophon {
     /**
      * Starts Sophon with the default save file location.
      *
-     * @param args command line arguments, currently unused
+     * @param args command line arguments, currently unused.
      */
     public static void main(String[] args) {
         new Sophon("data", "sophon.txt").run();

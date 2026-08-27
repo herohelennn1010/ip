@@ -14,8 +14,8 @@ public class Deadline extends Task {
     /**
      * Creates a deadline with the given description and due date.
      *
-     * @param description details of the deadline
-     * @param by when the deadline should be completed by
+     * @param description details of the deadline.
+     * @param by when the deadline should be completed by.
      */
     public Deadline(String description, LocalDate by) {
         super(description, TaskType.DEADLINE);
@@ -25,7 +25,7 @@ public class Deadline extends Task {
     /**
      * Returns this deadline with its due date shown in a user-friendly format.
      *
-     * @return display representation of this deadline
+     * @return display representation of this deadline.
      */
     @Override
     public String toString() {
@@ -36,7 +36,7 @@ public class Deadline extends Task {
     /**
      * Returns this deadline in the ISO date format used by the save file.
      *
-     * @return save file representation of this deadline
+     * @return save file representation of this deadline.
      */
     @Override
     public String toFileString() {

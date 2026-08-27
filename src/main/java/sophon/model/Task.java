@@ -16,8 +16,8 @@ public class Task {
     /**
      * Creates a task with the given description.
      *
-     * @param description details of the task
-     * @param type type of task being tracked
+     * @param description details of the task.
+     * @param type type of task being tracked.
      */
     public Task(String description, TaskType type) {
         this.description = description;
@@ -42,7 +42,7 @@ public class Task {
     /**
      * Returns the icon shown for this task's completion status.
      *
-     * @return X if the task is done, or a space otherwise
+     * @return X if the task is done, or a space otherwise.
      */
     public String getStatusIcon() {
         return isDone ? "X" : " ";
@@ -51,7 +51,7 @@ public class Task {
     /**
      * Returns this task in the format shown to the user.
      *
-     * @return task status and description
+     * @return task status and description.
      */
     @Override
     public String toString() {
@@ -61,7 +61,7 @@ public class Task {
     /**
      * Returns this task in the format used by the save file.
      *
-     * @return save file representation of this task
+     * @return save file representation of this task.
      */
     public String toFileString() {
         return "T | " + (isDone ? "1" : "0") + " | " + description;
