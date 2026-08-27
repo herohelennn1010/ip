@@ -1,3 +1,5 @@
+package sophon.model;
+
 /**
  * Represents a task tracked by Sophon.
  */

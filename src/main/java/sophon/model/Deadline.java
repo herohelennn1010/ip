@@ -1,3 +1,5 @@
+package sophon.model;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 

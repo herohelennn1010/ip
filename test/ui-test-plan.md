@@ -1,7 +1,7 @@
 # UI Test Plan
 
 - Working directory: project root
-- Setup command: `javac -encoding UTF-8 -d out\ui-test src\main\java\*.java`
+- Setup command: `powershell -NoProfile -Command "$sources = Get-ChildItem -Recurse -Filter *.java src\main\java; javac -encoding UTF-8 -d out\ui-test $sources.FullName"`
 - Comparison: exact text after normalizing line endings and trimming trailing spaces from each line
 
 ## Test Cases
@@ -12,7 +12,7 @@ Aim: Verify that Sophon greets the user and exits cleanly when the user enters `
 
 Command:
 ```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
 ```
 
 Inputs:
@@ -45,7 +45,7 @@ Aim: Verify that Sophon shows a friendly message if the task list cannot be save
 
 Command:
 ```text
-powershell -NoProfile -Command "$dataPath = Join-Path (Get-Location) 'data'; if (Test-Path -LiteralPath $dataPath) { $resolvedPath = (Resolve-Path -LiteralPath $dataPath).Path; if ($resolvedPath -eq $dataPath) { Remove-Item -LiteralPath $dataPath -Recurse -Force } }; [System.IO.File]::WriteAllText($dataPath, 'not a directory'); $commands = @('todo read book', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon; Remove-Item -LiteralPath $dataPath -Force -ErrorAction SilentlyContinue"
+powershell -NoProfile -Command "$dataPath = Join-Path (Get-Location) 'data'; if (Test-Path -LiteralPath $dataPath) { $resolvedPath = (Resolve-Path -LiteralPath $dataPath).Path; if ($resolvedPath -eq $dataPath) { Remove-Item -LiteralPath $dataPath -Recurse -Force } }; [System.IO.File]::WriteAllText($dataPath, 'not a directory'); $commands = @('todo read book', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon; Remove-Item -LiteralPath $dataPath -Force -ErrorAction SilentlyContinue"
 ```
 
 Inputs:
@@ -81,7 +81,7 @@ Aim: Verify that Sophon rejects task details containing the save-file separator.
 
 Command:
 ```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
 ```
 
 Inputs:
@@ -130,7 +130,7 @@ Aim: Verify that Sophon shows a friendly startup message when `data\sophon.txt` 
 
 Command:
 ```text
-powershell -NoProfile -Command "New-Item -ItemType Directory -Force -Path data | Out-Null; [System.IO.File]::WriteAllLines('data\sophon.txt', [string[]]@('X | 0 | mystery task'), [System.Text.UTF8Encoding]::new($false)); $commands = @('list', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
+powershell -NoProfile -Command "New-Item -ItemType Directory -Force -Path data | Out-Null; [System.IO.File]::WriteAllLines('data\sophon.txt', [string[]]@('X | 0 | mystery task'), [System.Text.UTF8Encoding]::new($false)); $commands = @('list', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
 ```
 
 Inputs:
@@ -167,7 +167,7 @@ Aim: Verify that Sophon records all three task types and displays them in the ta
 
 Command:
 ```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
 ```
 
 Inputs:
@@ -225,7 +225,7 @@ Aim: Verify that Sophon does not crash on malformed typed commands, rejects task
 
 Command:
 ```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
 ```
 
 Inputs:
@@ -344,7 +344,7 @@ Aim: Verify that Sophon removes the requested task, keeps the remaining tasks li
 
 Command:
 ```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
 ```
 
 Inputs:
@@ -420,7 +420,7 @@ Aim: Verify that Sophon marks and unmarks valid tasks, and explains invalid mark
 
 Command:
 ```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
 ```
 
 Inputs:
@@ -514,7 +514,7 @@ Aim: Verify that Sophon writes the latest task list to `data\sophon.txt` after a
 
 Command:
 ```text
-powershell -NoProfile -Command "$commands = @('todo read book', 'deadline return book /by 2019-10-15', 'event project meeting /from 2019-10-15 /to 2019-10-16', 'mark 1', 'delete 2', 'bye') -join [Environment]::NewLine; Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon; 'SAVED FILE:'; Get-Content -LiteralPath 'data\sophon.txt'"
+powershell -NoProfile -Command "$commands = @('todo read book', 'deadline return book /by 2019-10-15', 'event project meeting /from 2019-10-15 /to 2019-10-16', 'mark 1', 'delete 2', 'bye') -join [Environment]::NewLine; Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon; 'SAVED FILE:'; Get-Content -LiteralPath 'data\sophon.txt'"
 ```
 
 Inputs:
@@ -574,7 +574,7 @@ Aim: Verify that Sophon loads todos, deadlines, and events from `data\sophon.txt
 
 Command:
 ```text
-powershell -NoProfile -Command "New-Item -ItemType Directory -Force -Path data | Out-Null; [System.IO.File]::WriteAllLines('data\sophon.txt', [string[]]@('T | 1 | read book', 'D | 0 | return book | 2019-10-15', 'E | 0 | project meeting | 2019-10-15 | 2019-10-16'), [System.Text.UTF8Encoding]::new($false)); $commands = @('list', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
+powershell -NoProfile -Command "New-Item -ItemType Directory -Force -Path data | Out-Null; [System.IO.File]::WriteAllLines('data\sophon.txt', [string[]]@('T | 1 | read book', 'D | 0 | return book | 2019-10-15', 'E | 0 | project meeting | 2019-10-15 | 2019-10-16'), [System.Text.UTF8Encoding]::new($false)); $commands = @('list', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
 ```
 
 Inputs:

@@ -1,3 +1,7 @@
+package sophon.ui;
+
+import sophon.model.TaskList;
+
 /**
  * Handles console output shown to the user.
  */
