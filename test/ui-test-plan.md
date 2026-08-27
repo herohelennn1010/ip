@@ -39,6 +39,128 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
+### TC-10: Handle save path failure
+
+Aim: Verify that Sophon shows a friendly message if the task list cannot be saved.
+
+Command:
+```text
+powershell -NoProfile -Command "$dataPath = Join-Path (Get-Location) 'data'; if (Test-Path -LiteralPath $dataPath) { $resolvedPath = (Resolve-Path -LiteralPath $dataPath).Path; if ($resolvedPath -eq $dataPath) { Remove-Item -LiteralPath $dataPath -Recurse -Force } }; [System.IO.File]::WriteAllText($dataPath, 'not a directory'); $commands = @('todo read book', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon; Remove-Item -LiteralPath $dataPath -Force -ErrorAction SilentlyContinue"
+```
+
+Inputs:
+```text
+
+```
+
+Expected output:
+```text
+____________________________________________________________
+ ____              _
+/ ___|  ___  _ __ | |__   ___  _ __
+\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
+ ___) | (_) | |_) | | | | (_) | | | |
+|____/ \___/| .__/|_| |_|\___/|_| |_|
+            |_|
+     你好! I'm Sophon.
+     I'm listening.
+     What do you wish to communicate?
+____________________________________________________________
+____________________________________________________________
+     I could not save the task list.
+____________________________________________________________
+____________________________________________________________
+     Our conversation ends here.
+     Until we meet again.
+____________________________________________________________
+```
+
+### TC-08: Reject file separator in task details
+
+Aim: Verify that Sophon rejects task details containing the save-file separator.
+
+Command:
+```text
+powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
+```
+
+Inputs:
+```text
+todo read | book
+deadline return book /by June | 6
+event meeting /from 2pm | 3pm /to 4pm
+list
+bye
+```
+
+Expected output:
+```text
+____________________________________________________________
+ ____              _
+/ ___|  ___  _ __ | |__   ___  _ __
+\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
+ ___) | (_) | |_) | | | | (_) | | | |
+|____/ \___/| .__/|_| |_|\___/|_| |_|
+            |_|
+     你好! I'm Sophon.
+     I'm listening.
+     What do you wish to communicate?
+____________________________________________________________
+____________________________________________________________
+     Please do not use " | " in task details.
+____________________________________________________________
+____________________________________________________________
+     Please do not use " | " in task details.
+____________________________________________________________
+____________________________________________________________
+     Please do not use " | " in task details.
+____________________________________________________________
+____________________________________________________________
+     Current tasks under observation:
+____________________________________________________________
+____________________________________________________________
+     Our conversation ends here.
+     Until we meet again.
+____________________________________________________________
+```
+
+### TC-09: Handle invalid save file
+
+Aim: Verify that Sophon shows a friendly startup message when `data\sophon.txt` is malformed.
+
+Command:
+```text
+powershell -NoProfile -Command "New-Item -ItemType Directory -Force -Path data | Out-Null; [System.IO.File]::WriteAllLines('data\sophon.txt', [string[]]@('X | 0 | mystery task'), [System.Text.UTF8Encoding]::new($false)); $commands = @('list', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test Sophon"
+```
+
+Inputs:
+```text
+
+```
+
+Expected output:
+```text
+____________________________________________________________
+ ____              _
+/ ___|  ___  _ __ | |__   ___  _ __
+\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
+ ___) | (_) | |_) | | | | (_) | | | |
+|____/ \___/| .__/|_| |_|\___/|_| |_|
+            |_|
+     你好! I'm Sophon.
+     I'm listening.
+     What do you wish to communicate?
+     The save file contains an unknown task type.
+____________________________________________________________
+____________________________________________________________
+     Current tasks under observation:
+____________________________________________________________
+____________________________________________________________
+     Our conversation ends here.
+     Until we meet again.
+____________________________________________________________
+```
+
 ### TC-02: Add and list todos, deadlines, and events
 
 Aim: Verify that Sophon records all three task types and displays them in the task list.
