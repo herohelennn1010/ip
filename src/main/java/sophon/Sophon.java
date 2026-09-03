@@ -153,11 +153,18 @@ public class Sophon {
     }
 
     /**
+     * Generates a response for the user's chat message.
+     */
+    public String getResponse(String input) {
+        return "Duke heard: " + input;
+    }
+
+    /**
      * Starts Sophon with the default save file location.
      *
      * @param args command line arguments, currently unused.
      */
     public static void main(String[] args) {
-        new Sophon("data", "sophon.txt").run();
+        // new Sophon("data", "sophon.txt").run();
     }
 }
