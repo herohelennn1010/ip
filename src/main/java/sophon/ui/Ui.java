@@ -6,8 +6,6 @@ import sophon.model.TaskList;
  * Handles console output shown to the user.
  */
 public class Ui {
-    private static final String INDENT = "     ";
-    private static final String LINE = "____________________________________________________________";
     private static final String BANNER = " ____              _                 \n"
             + "/ ___|  ___  _ __ | |__   ___  _ __ \n"
             + "\\___ \\ / _ \\| '_ \\| '_ \\ / _ \\| '_ \\\n"
@@ -15,59 +13,29 @@ public class Ui {
             + "|____/ \\___/| .__/|_| |_|\\___/|_| |_|\n"
             + "            |_|                       \n";
 
-    /**
-     * Shows a horizontal divider line.
-     */
-    public void showLine() {
-        System.out.println(LINE);
-    }
-
-    /**
-     * Shows text using the standard Sophon indentation.
-     *
-     * @param text text to show.
-     */
-    public void showIndented(String text) {
-        System.out.println(INDENT + text.replace("\n", "\n" + INDENT));
-    }
-
-    /**
-     * Shows text exactly as given.
-     *
-     * @param text text to show.
-     */
-    public void showRaw(String text) {
-        System.out.print(text);
-    }
 
     /**
      * Shows Sophon's greeting and any startup warning.
      *
      * @param startupWarning warning to show after the greeting, or null if startup succeeded.
      */
-    public void showGreeting(String startupWarning) {
-        String greeting = "你好! I'm Sophon.\n"
+    public String getGreeting(String startupWarning) {
+        String greeting = "Hi. I'm Sophon.\n"
                 + "I'm listening.\n"
-                + "What do you wish to communicate?";
+                + "What do you wish to communicate?\n";
 
-        showLine();
-        showRaw(BANNER);
-        showIndented(greeting);
-        if (startupWarning != null) {
-            showIndented(startupWarning);
+        if (startupWarning == null) {
+            return BANNER + greeting;
         }
-        showLine();
+        return BANNER + greeting + startupWarning;
     }
 
     /**
      * Shows Sophon's farewell message.
      */
-    public void showBye() {
-        String bye = "Our conversation ends here.\n"
-                + "Until we meet again.";
-
-        showIndented(bye);
-        showLine();
+    public String getByeMessage() {
+        return "Our conversation ends here.\n"
+                + "Until we meet again.\n";
     }
 
     /**
@@ -75,17 +43,8 @@ public class Ui {
      *
      * @param message error message to show.
      */
-    public void showError(String message) {
-        showIndented(message);
-    }
-
-    /**
-     * Shows a normal message.
-     *
-     * @param message message to show.
-     */
-    public void showMessage(String message) {
-        showIndented(message);
+    public String getError(String message) {
+        return message;
     }
 
     /**
@@ -93,11 +52,13 @@ public class Ui {
      *
      * @param tasks tasks to show.
      */
-    public void showList(TaskList tasks) {
-        showIndented("Current tasks under observation:");
+    public String getTaskList(TaskList tasks) {
+        StringBuilder taskList = new StringBuilder();
         for (int i = 0; i < tasks.size(); i++) {
-            showIndented((i + 1) + "." + tasks.get(i));
+            taskList.append(String.format("%d.%s%n", i + 1, tasks.get(i)));
         }
+        return "Current tasks under observation:\n"
+                + taskList;
     }
 
     /**
@@ -105,10 +66,12 @@ public class Ui {
      *
      * @param tasks matching tasks to show.
      */
-    public void showMatchingTasks(TaskList tasks) {
-        showIndented("These signals match your search:");
+    public String getMatchingTasks(TaskList tasks) {
+        StringBuilder taskList = new StringBuilder();
         for (int i = 0; i < tasks.size(); i++) {
-            showIndented((i + 1) + "." + tasks.get(i));
+            taskList.append(String.format("%d.%s%n", i + 1, tasks.get(i)));
         }
+        return "These signals match your search:\n"
+                + taskList;
     }
 }

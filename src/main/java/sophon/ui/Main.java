@@ -12,6 +12,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sophon.Sophon;
 
+/**
+ * Starts the JavaFX chat window for Sophon.
+ */
 public class Main extends Application {
     private ScrollPane scrollPane;
     private VBox dialogContainer;
@@ -86,10 +89,10 @@ public class Main extends Application {
      */
     private void handleUserInput() {
         String userText = userInput.getText();
-        String sophonText = sophon.getResponse(userInput.getText());
+        String sophonText = sophon.getResponse(userText);
         dialogContainer.getChildren().addAll(
-                new DialogBox(userText, userImage),
-                new DialogBox(sophonText, sophonImage)
+                DialogBox.getUserDialog(userText, userImage),
+                DialogBox.getSophonDialog(sophonText, sophonImage)
         );
         userInput.clear();
     }

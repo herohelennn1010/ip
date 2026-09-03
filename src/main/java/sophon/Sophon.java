@@ -1,7 +1,6 @@
 package sophon;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 import sophon.exception.SophonException;
 import sophon.logic.Command;
@@ -46,117 +45,91 @@ public class Sophon {
         startupWarning = warning;
     }
 
-    private void markTask(int taskIndex) throws SophonException, IOException {
+    private String markTask(int taskIndex) throws SophonException, IOException {
         if (!tasks.isValidIndex(taskIndex)) {
             throw new SophonException("No task exists at that number.");
         }
 
         tasks.get(taskIndex).markAsDone();
         storage.saveTasks(tasks);
-        ui.showMessage("Acknowledged. This task is now complete:\n"
-                + "  " + tasks.get(taskIndex));
+        return "Acknowledged. This task is now complete:\n"
+                + "  " + tasks.get(taskIndex);
     }
 
-    private void unmarkTask(int taskIndex) throws SophonException, IOException {
+    private String unmarkTask(int taskIndex) throws SophonException, IOException {
         if (!tasks.isValidIndex(taskIndex)) {
             throw new SophonException("No task exists at that number.");
         }
 
         tasks.get(taskIndex).markAsNotDone();
         storage.saveTasks(tasks);
-        ui.showMessage("Reverted. This task is once again incomplete:");
-        ui.showMessage("  " + tasks.get(taskIndex));
+        return "Reverted. This task is once again incomplete:\n"
+                + "  " + tasks.get(taskIndex);
     }
 
-    private void deleteTask(int taskIndex) throws SophonException, IOException {
+    private String deleteTask(int taskIndex) throws SophonException, IOException {
         if (!tasks.isValidIndex(taskIndex)) {
             throw new SophonException("No task exists at that number.");
         }
 
         Task removedTask = tasks.remove(taskIndex);
         storage.saveTasks(tasks);
-        ui.showMessage("Removed. This task is no longer under observation:");
-        ui.showMessage("  " + removedTask);
-        ui.showMessage(tasks.size() + " tasks remain under observation.");
-    }
-
-    /**
-     * Starts the chatbot and handles user commands until the user exits.
-     */
-    public void run() {
-        Scanner scanner = new Scanner(System.in);
-
-        ui.showGreeting(startupWarning);
-
-        while (true) {
-            String input = scanner.nextLine();
-            ui.showLine();
-
-            try {
-                Command command = Parser.parse(input);
-
-                switch (command.getType()) {
-                    case BYE:
-                        ui.showBye();
-                        return;
-                    case LIST:
-                        ui.showList(tasks);
-                        break;
-                    case FIND:
-                        ui.showMatchingTasks(tasks.find(command.getKeyword()));
-                        break;
-                    case ADD_TODO:
-                        tasks.add(command.getTask());
-                        storage.saveTasks(tasks);
-                        ui.showMessage("Recorded. A new task has entered observation:");
-                        ui.showMessage("  " + command.getTask());
-                        ui.showMessage(tasks.size() + " tasks are currently under observation.");
-                        break;
-                    case ADD_DEADLINE:
-                        tasks.add(command.getTask());
-                        storage.saveTasks(tasks);
-                        ui.showMessage("Recorded. A new deadline has entered observation:");
-                        ui.showMessage("  " + command.getTask());
-                        ui.showMessage(tasks.size() + " tasks are currently under observation.");
-                        break;
-                    case ADD_EVENT:
-                        tasks.add(command.getTask());
-                        storage.saveTasks(tasks);
-                        ui.showMessage("Recorded. A new event has entered observation:");
-                        ui.showMessage("  " + command.getTask());
-                        ui.showMessage(tasks.size() + " tasks are currently under observation.");
-                        break;
-                    case MARK:
-                        markTask(command.getTaskIndex());
-                        break;
-                    case UNMARK:
-                        unmarkTask(command.getTaskIndex());
-                        break;
-                    case DELETE:
-                        deleteTask(command.getTaskIndex());
-                        break;
-                    case UNKNOWN:
-                        ui.showMessage("Your message has been observed.\n"
-                                + "Its meaning, however, remains unknown.");
-                        break;
-                    default:
-                        throw new SophonException("Your message has been observed.\n"
-                                + "Its meaning, however, remains unknown.");
-                }
-            } catch (SophonException e) {
-                ui.showError(e.getMessage());
-            } catch (IOException e) {
-                ui.showError("I could not save the task list.");
-            }
-            ui.showLine();
-        }
+        return "Removed. This task is no longer under observation:\n"
+                + "  " + removedTask + "\n"
+                + tasks.size() + " tasks remain under observation.";
     }
 
     /**
      * Generates a response for the user's chat message.
+     *
+     * @param input user input.
+     * @return response to show in the chat window.
      */
     public String getResponse(String input) {
-        return "Duke heard: " + input;
+        try {
+            Command command = Parser.parse(input);
+
+            switch (command.getType()) {
+                case BYE:
+                    return ui.getByeMessage();
+                case LIST:
+                    return ui.getTaskList(tasks);
+                case FIND:
+                    return ui.getMatchingTasks(tasks.find(command.getKeyword()));
+                case ADD_TODO:
+                    tasks.add(command.getTask());
+                    storage.saveTasks(tasks);
+                    return "Recorded. A new task has entered observation:\n"
+                            + "  " + command.getTask() + "\n"
+                            + tasks.size() + " tasks are currently under observation.";
+                case ADD_DEADLINE:
+                    tasks.add(command.getTask());
+                    storage.saveTasks(tasks);
+                    return "Recorded. A new deadline has entered observation:\n"
+                            + "  " + command.getTask() + "\n"
+                            + tasks.size() + " tasks are currently under observation.";
+                case ADD_EVENT:
+                    tasks.add(command.getTask());
+                    storage.saveTasks(tasks);
+                    return "Recorded. A new event has entered observation:\n"
+                            + "  " + command.getTask() + "\n"
+                            + tasks.size() + " tasks are currently under observation.";
+                case MARK:
+                    return markTask(command.getTaskIndex());
+                case UNMARK:
+                    return unmarkTask(command.getTaskIndex());
+                case DELETE:
+                    return deleteTask(command.getTaskIndex());
+                case UNKNOWN:
+                default:
+                    return "Your message has been observed.\n"
+                            + "Its meaning, however, remains unknown.";
+            }
+        } catch (SophonException e) {
+            return e.getMessage();
+        } catch (IOException e) {
+            return "I could not save the task list.";
+        }
     }
 
     /**
