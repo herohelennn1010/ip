@@ -17,16 +17,16 @@ public class ParserTest {
 
     @Test
     public void parseTaskIndex_missingTaskNumber_throwsExceptionWithGivenMessage() {
-        SophonException exception = assertThrows(SophonException.class,
-                () -> Parser.parseTaskIndex("mark", "mark", "Missing task number."));
+        SophonException exception = assertThrows(
+                SophonException.class, () -> Parser.parseTaskIndex("mark", "mark", "Missing task number."));
 
         assertEquals("Missing task number.", exception.getMessage());
     }
 
     @Test
     public void parseTaskIndex_nonNumericTaskNumber_throwsException() {
-        SophonException exception = assertThrows(SophonException.class,
-                () -> Parser.parseTaskIndex("mark one", "mark", "Missing task number."));
+        SophonException exception = assertThrows(
+                SophonException.class, () -> Parser.parseTaskIndex("mark one", "mark", "Missing task number."));
 
         assertEquals("Task numbers must be written as numerals.", exception.getMessage());
     }
