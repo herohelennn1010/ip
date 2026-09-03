@@ -132,12 +132,7 @@ public class Sophon {
         }
     }
 
-    /**
-     * Starts Sophon with the default save file location.
-     *
-     * @param args command line arguments, currently unused.
-     */
-    public static void main(String[] args) {
-        // new Sophon("data", "sophon.txt").run();
+    public String getGreeting() {
+        return ui.getGreeting(startupWarning);
     }
 }

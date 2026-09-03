@@ -11,6 +11,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sophon.Sophon;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 /**
  * Starts the JavaFX chat window for Sophon.
@@ -24,15 +26,21 @@ public class Main extends Application {
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/user.png"));
     private Image sophonImage = new Image(this.getClass().getResourceAsStream("/images/sophon.png"));
     private Sophon sophon = new Sophon("data", "sophon.txt");
+    private Stage stage;
 
     @Override
     public void start(Stage stage) {
+        this.stage = stage;
         scrollPane = new ScrollPane();
         dialogContainer = new VBox();
         scrollPane.setContent(dialogContainer);
 
         userInput = new TextField();
         sendButton = new Button("Send");
+
+        dialogContainer.getChildren().add(
+                DialogBox.getSophonDialog(sophon.getGreeting(), sophonImage)
+        );
 
         sendButton.setOnMouseClicked((event) -> {
             handleUserInput();
@@ -88,8 +96,21 @@ public class Main extends Application {
      * the dialog container. Clears the user input after processing.
      */
     private void handleUserInput() {
-        String userText = userInput.getText();
+        String userText = userInput.getText().trim();
         String sophonText = sophon.getResponse(userText);
+
+        if (userText.isEmpty()) {
+            return;
+        }
+        if (userText.equalsIgnoreCase("bye")) {
+            userInput.setDisable(true);
+            sendButton.setDisable(true);
+            DialogBox.getSophonDialog(sophonText, sophonImage);
+
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished(event -> stage.close());
+            delay.play();
+        }
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(userText, userImage),
                 DialogBox.getSophonDialog(sophonText, sophonImage)
