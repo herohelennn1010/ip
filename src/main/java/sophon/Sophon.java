@@ -96,52 +96,52 @@ public class Sophon {
                 Command command = Parser.parse(input);
 
                 switch (command.getType()) {
-                case BYE:
-                    ui.showBye();
-                    return;
-                case LIST:
-                    ui.showList(tasks);
-                    break;
-                case FIND:
-                    ui.showMatchingTasks(tasks.find(command.getKeyword()));
-                    break;
-                case ADD_TODO:
-                    tasks.add(command.getTask());
-                    storage.saveTasks(tasks);
-                    ui.showMessage("Recorded. A new task has entered observation:");
-                    ui.showMessage("  " + command.getTask());
-                    ui.showMessage(tasks.size() + " tasks are currently under observation.");
-                    break;
-                case ADD_DEADLINE:
-                    tasks.add(command.getTask());
-                    storage.saveTasks(tasks);
-                    ui.showMessage("Recorded. A new deadline has entered observation:");
-                    ui.showMessage("  " + command.getTask());
-                    ui.showMessage(tasks.size() + " tasks are currently under observation.");
-                    break;
-                case ADD_EVENT:
-                    tasks.add(command.getTask());
-                    storage.saveTasks(tasks);
-                    ui.showMessage("Recorded. A new event has entered observation:");
-                    ui.showMessage("  " + command.getTask());
-                    ui.showMessage(tasks.size() + " tasks are currently under observation.");
-                    break;
-                case MARK:
-                    markTask(command.getTaskIndex());
-                    break;
-                case UNMARK:
-                    unmarkTask(command.getTaskIndex());
-                    break;
-                case DELETE:
-                    deleteTask(command.getTaskIndex());
-                    break;
-                case UNKNOWN:
-                    ui.showMessage("Your message has been observed.\n"
-                            + "Its meaning, however, remains unknown.");
-                    break;
-                default:
-                    throw new SophonException("Your message has been observed.\n"
-                            + "Its meaning, however, remains unknown.");
+                    case BYE:
+                        ui.showBye();
+                        return;
+                    case LIST:
+                        ui.showList(tasks);
+                        break;
+                    case FIND:
+                        ui.showMatchingTasks(tasks.find(command.getKeyword()));
+                        break;
+                    case ADD_TODO:
+                        tasks.add(command.getTask());
+                        storage.saveTasks(tasks);
+                        ui.showMessage("Recorded. A new task has entered observation:");
+                        ui.showMessage("  " + command.getTask());
+                        ui.showMessage(tasks.size() + " tasks are currently under observation.");
+                        break;
+                    case ADD_DEADLINE:
+                        tasks.add(command.getTask());
+                        storage.saveTasks(tasks);
+                        ui.showMessage("Recorded. A new deadline has entered observation:");
+                        ui.showMessage("  " + command.getTask());
+                        ui.showMessage(tasks.size() + " tasks are currently under observation.");
+                        break;
+                    case ADD_EVENT:
+                        tasks.add(command.getTask());
+                        storage.saveTasks(tasks);
+                        ui.showMessage("Recorded. A new event has entered observation:");
+                        ui.showMessage("  " + command.getTask());
+                        ui.showMessage(tasks.size() + " tasks are currently under observation.");
+                        break;
+                    case MARK:
+                        markTask(command.getTaskIndex());
+                        break;
+                    case UNMARK:
+                        unmarkTask(command.getTaskIndex());
+                        break;
+                    case DELETE:
+                        deleteTask(command.getTaskIndex());
+                        break;
+                    case UNKNOWN:
+                        ui.showMessage("Your message has been observed.\n"
+                                + "Its meaning, however, remains unknown.");
+                        break;
+                    default:
+                        throw new SophonException("Your message has been observed.\n"
+                                + "Its meaning, however, remains unknown.");
                 }
             } catch (SophonException e) {
                 ui.showError(e.getMessage());

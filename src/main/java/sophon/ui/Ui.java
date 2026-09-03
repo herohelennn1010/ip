@@ -100,6 +100,11 @@ public class Ui {
         }
     }
 
+    /**
+     * Shows the tasks that match a user's search.
+     *
+     * @param tasks matching tasks to show.
+     */
     public void showMatchingTasks(TaskList tasks) {
         showIndented("These signals match your search:");
         for (int i = 0; i < tasks.size(); i++) {
