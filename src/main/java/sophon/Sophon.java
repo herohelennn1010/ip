@@ -87,7 +87,7 @@ public class Sophon {
      */
     public String getResponse(String input) {
         try {
-            Command command = Parser.parse(input);
+            Command command = Parser.parse(input.trim());
 
             switch (command.getType()) {
                 case BYE:
