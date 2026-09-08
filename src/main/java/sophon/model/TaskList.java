@@ -1,6 +1,7 @@
 package sophon.model;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Stores the tasks currently tracked by Sophon.
@@ -64,12 +65,10 @@ public class TaskList {
      * @return matching tasks
      */
     public TaskList find(String keyword) {
-        ArrayList<Task> matchingTasks = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.containsKeyword(keyword)) {
-                matchingTasks.add(task);
-            }
-        }
+        ArrayList<Task> matchingTasks = tasks.stream()
+                .filter(task -> task.containsKeyword(keyword))
+                .collect(Collectors.toCollection(ArrayList::new));
+
         return new TaskList(matchingTasks);
     }
 
