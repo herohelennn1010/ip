@@ -67,6 +67,15 @@ public class Command {
     }
 
     private Command(Type type, Task task, int taskIndex, String keyword) {
+        assert type != null : "Command type must not be null";
+        assert type != Type.FIND || keyword != null
+                : "Find command must contain a keyword";
+        assert type != Type.ADD_TODO
+                && type != Type.ADD_DEADLINE
+                && type != Type.ADD_EVENT
+                || task != null
+                : "Add command must contain a task";
+
         this.type = type;
         this.task = task;
         this.taskIndex = taskIndex;
