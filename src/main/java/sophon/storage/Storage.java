@@ -81,15 +81,53 @@ public class Storage {
      * @throws SophonException if the line does not match the save file format.
      */
     private Task parseTask(String line) throws SophonException {
-        String[] parts = line.split(" \\| ");
+        String[] fields = parseTaskFields(line);
+        Task task = createTask(fields);
 
-        if (parts.length < 3) {
+        if (fields[1].equals("1")) {
+            task.markAsDone();
+        }
+
+        return task;
+    }
+
+    private Task createTask(String[] fields) throws SophonException {
+        String type = fields[0];
+        String description = fields[2];
+
+        if (type.equals("T")) {
+            if (fields.length != 3) {
+                throw new SophonException("The save file contains an invalid todo.");
+            }
+            return new Todo(description);
+        } else if (type.equals("D")) {
+            if (fields.length != 4) {
+                throw new SophonException("The save file contains an invalid deadline.");
+            } else if (fields[3].isBlank()) {
+                throw new SophonException("The save file contains an empty deadline time.");
+            }
+            return new Deadline(description, convertDate(fields[3]));
+        } else if (type.equals("E")) {
+            if (fields.length != 5) {
+                throw new SophonException("The save file contains an invalid event.");
+            } else if (fields[3].isBlank() || fields[4].isBlank()) {
+                throw new SophonException("The save file contains an empty event time.");
+            }
+            return new Event(description, convertDate(fields[3]), convertDate(fields[4]));
+        } else {
+            throw new SophonException("The save file contains an unknown task type.");
+        }
+    }
+
+    private String[] parseTaskFields(String line) throws SophonException {
+        String[] fields = line.split(" \\| ");
+
+        if (fields.length < 3) {
             throw new SophonException("The save file contains an incomplete task.");
         }
 
-        String type = parts[0];
-        String status = parts[1];
-        String description = parts[2];
+        String status = fields[1];
+        String description = fields[2];
 
         if (!status.equals("0") && !status.equals("1")) {
             throw new SophonException("The save file contains an invalid task status.");
@@ -97,35 +135,7 @@ public class Storage {
             throw new SophonException("The save file contains an empty task description.");
         }
 
-        Task task;
-        if (type.equals("T")) {
-            if (parts.length != 3) {
-                throw new SophonException("The save file contains an invalid todo.");
-            }
-            task = new Todo(description);
-        } else if (type.equals("D")) {
-            if (parts.length != 4) {
-                throw new SophonException("The save file contains an invalid deadline.");
-            } else if (parts[3].isBlank()) {
-                throw new SophonException("The save file contains an empty deadline time.");
-            }
-            task = new Deadline(description, convertDate(parts[3]));
-        } else if (type.equals("E")) {
-            if (parts.length != 5) {
-                throw new SophonException("The save file contains an invalid event.");
-            } else if (parts[3].isBlank() || parts[4].isBlank()) {
-                throw new SophonException("The save file contains an empty event time.");
-            }
-            task = new Event(description, convertDate(parts[3]), convertDate(parts[4]));
-        } else {
-            throw new SophonException("The save file contains an unknown task type.");
-        }
-
-        if (status.equals("1")) {
-            task.markAsDone();
-        }
-
-        return task;
+        return fields;
     }
 
     /**
