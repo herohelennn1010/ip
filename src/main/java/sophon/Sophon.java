@@ -97,23 +97,11 @@ public class Sophon {
                 case FIND:
                     return ui.getMatchingTasks(tasks.find(command.getKeyword()));
                 case ADD_TODO:
-                    tasks.add(command.getTask());
-                    storage.saveTasks(tasks);
-                    return "Recorded. A new task has entered observation:\n"
-                            + "  " + command.getTask() + "\n"
-                            + tasks.size() + " tasks are currently under observation.";
+                    return addTask(command.getTask(), "task");
                 case ADD_DEADLINE:
-                    tasks.add(command.getTask());
-                    storage.saveTasks(tasks);
-                    return "Recorded. A new deadline has entered observation:\n"
-                            + "  " + command.getTask() + "\n"
-                            + tasks.size() + " tasks are currently under observation.";
+                    return addTask(command.getTask(), "deadline");
                 case ADD_EVENT:
-                    tasks.add(command.getTask());
-                    storage.saveTasks(tasks);
-                    return "Recorded. A new event has entered observation:\n"
-                            + "  " + command.getTask() + "\n"
-                            + tasks.size() + " tasks are currently under observation.";
+                    return addTask(command.getTask(), "event");
                 case MARK:
                     return markTask(command.getTaskIndex());
                 case UNMARK:
@@ -130,6 +118,14 @@ public class Sophon {
         } catch (IOException e) {
             return "I could not save the task list.";
         }
+    }
+
+    private String addTask(Task task, String taskKind) throws IOException {
+        tasks.add(task);
+        storage.saveTasks(tasks);
+        return "Recorded. A new " + taskKind + " has entered observation:\n"
+                + "  " + task + "\n"
+                + tasks.size() + " tasks are currently under observation.";
     }
 
     public String getGreeting() {

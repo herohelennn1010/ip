@@ -131,6 +131,9 @@ Documentation, 3 marks:
 
 ## Assistant Working Rules
 
+- Before each code-quality review or refactoring, read
+  `.codex/code-quality-guidelines.md` and apply its stand-alone refactoring
+  checklist.
 - Before implementing a feature, map it to the current iP increment and grading bar.
 - Do not update the project-root `README.md` for chatbot feature or user-guide changes; it is the assignment/setup README. Put product usage documentation in `docs/README.md` instead.
 - Prefer small, understandable Java/OOP steps that fit the student's learning stage.
