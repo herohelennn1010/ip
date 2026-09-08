@@ -37,6 +37,11 @@ public class MainWindow {
 
     @FXML
     private void initialize() {
+        assert scrollPane != null : "scrollPane was not injected from FXML";
+        assert dialogContainer != null : "dialogContainer was not injected from FXML";
+        assert userInput != null : "userInput was not injected from FXML";
+        assert sendButton != null : "sendButton was not injected from FXML";
+
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 

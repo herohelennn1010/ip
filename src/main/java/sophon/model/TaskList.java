@@ -22,6 +22,9 @@ public class TaskList {
      * @param tasks tasks to store.
      */
     public TaskList(ArrayList<Task> tasks) {
+        assert tasks != null : "Backing task list must not be null";
+        assert !tasks.contains(null) : "Task list must not contain null tasks";
+
         this.tasks = tasks;
     }
 
@@ -31,6 +34,7 @@ public class TaskList {
      * @param task task to add.
      */
     public void add(Task task) {
+        assert task != null : "Task to add must not be null";
         tasks.add(task);
     }
 
