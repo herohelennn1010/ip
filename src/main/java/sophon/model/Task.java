@@ -20,6 +20,10 @@ public class Task {
      * @param type type of task being tracked.
      */
     public Task(String description, TaskType type) {
+        assert description != null : "Task description must not be null";
+        assert !description.isBlank() : "Task description must not be blank";
+        assert type != null : "Task type must not be null";
+
         this.description = description;
         this.type = type;
         this.isDone = false;
