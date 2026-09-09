@@ -1,8 +1,8 @@
 package sophon.model;
 
-import java.util.Locale;
-
 import static java.lang.Math.min;
+
+import java.util.Locale;
 
 /**
  * Represents a task tracked by Sophon.
@@ -57,10 +57,13 @@ public class Task {
     }
 
     /**
-     * Checks whether this task's description contains the given keyword.
+     * Checks whether this task's description matches the given keyword.
      *
-     * @param keyword keyword to search for
-     * @return true if the description contains the keyword
+     * <p>A match is case-insensitive and may be either a substring match or a
+     * fuzzy word match within the permitted edit distance.</p>
+     *
+     * @param keyword keyword to search for.
+     * @return true if the description matches the keyword.
      */
     public boolean containsKeyword(String keyword) {
         String normalizedDescription = description.toLowerCase(Locale.ROOT);
@@ -79,8 +82,14 @@ public class Task {
         return false;
     }
 
+    /**
+     * Returns the maximum edit distance permitted for a word of the given length.
+     *
+     * @param word word used to determine the threshold.
+     * @return maximum permitted edit distance.
+     */
     private int getMaximumDistance(String word) {
-        // to protect short words to be matched falsely by fuzzy matching
+        // Require closer matches for short words to reduce false positives.
         int len = word.length();
         if (len <= 2) {
             return 0;
@@ -91,6 +100,13 @@ public class Task {
         }
     }
 
+    /**
+     * Calculates the Levenshtein distance between two strings.
+     *
+     * @param first first string to compare.
+     * @param second second string to compare.
+     * @return minimum number of insertions, deletions, and substitutions required.
+     */
     private static int calculateEditDistance(String first, String second) {
         int[][] dist = new int[first.length() + 1][second.length() + 1];
 
@@ -114,6 +130,7 @@ public class Task {
 
         return dist[first.length()][second.length()];
     }
+
     /**
      * Returns this task in the format shown to the user.
      *
