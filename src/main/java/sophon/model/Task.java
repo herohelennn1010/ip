@@ -2,6 +2,8 @@ package sophon.model;
 
 import java.util.Locale;
 
+import static java.lang.Math.min;
+
 /**
  * Represents a task tracked by Sophon.
  */
@@ -61,10 +63,57 @@ public class Task {
      * @return true if the description contains the keyword
      */
     public boolean containsKeyword(String keyword) {
-        return description.toLowerCase(Locale.ROOT)
-                .contains(keyword.toLowerCase(Locale.ROOT));
+        String normalizedDescription = description.toLowerCase(Locale.ROOT);
+        String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
+        if (normalizedDescription.contains(normalizedKeyword)) {
+            return true;
+        }
+
+        String[] parts = normalizedDescription.split("\\s+");
+        for (String word : parts) {
+            int editDistance = calculateEditDistance(normalizedKeyword, word);
+            if (editDistance <= getMaximumDistance(word)) {
+                return true;
+            }
+        }
+        return false;
     }
 
+    private int getMaximumDistance(String word) {
+        // to protect short words to be matched falsely by fuzzy matching
+        int len = word.length();
+        if (len <= 2) {
+            return 0;
+        } else if (len <= 5) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
+    private static int calculateEditDistance(String first, String second) {
+        int[][] dist = new int[first.length() + 1][second.length() + 1];
+
+        for (int i = 0; i < dist.length; i++) {
+            dist[i][0] = i;
+        }
+        for (int j = 0; j < dist[0].length; j++) {
+            dist[0][j] = j;
+        }
+
+        for (int i = 1; i < dist.length; i++) {
+            for (int j = 1; j < dist[0].length; j++) {
+                int subCost = first.charAt(i - 1) == second.charAt(j - 1) ? 0 : 1;
+                int deletion = dist[i - 1][j] + 1;
+                int insertion = dist[i][j - 1] + 1;
+                int substitution = dist[i - 1][j - 1] + subCost;
+
+                dist[i][j] = min(min(deletion, insertion), substitution);
+            }
+        }
+
+        return dist[first.length()][second.length()];
+    }
     /**
      * Returns this task in the format shown to the user.
      *
