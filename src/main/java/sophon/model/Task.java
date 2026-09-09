@@ -1,5 +1,7 @@
 package sophon.model;
 
+import java.util.Locale;
+
 /**
  * Represents a task tracked by Sophon.
  */
@@ -59,7 +61,8 @@ public class Task {
      * @return true if the description contains the keyword
      */
     public boolean containsKeyword(String keyword) {
-        return description.contains(keyword);
+        return description.toLowerCase(Locale.ROOT)
+                .contains(keyword.toLowerCase(Locale.ROOT));
     }
 
     /**
