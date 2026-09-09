@@ -95,8 +95,9 @@ list
 
 ## Finding Tasks
 
-Type `find`, followed by a keyword, to view tasks whose descriptions contain
-that keyword.
+Type `find`, followed by a search term, to view matching tasks. Search is
+case-insensitive, accepts partial words, and tolerates small typing errors. For
+example, `find bok` matches tasks containing `book`.
 
 Example:
 
@@ -108,6 +109,9 @@ find book
      2.[D][ ] return book (by: Oct 15 2019)
     ____________________________________________________________
 ```
+
+The number of tolerated typing errors depends on the length of the word. Short
+words require closer matches to reduce unrelated results.
 
 ## Marking Tasks
 

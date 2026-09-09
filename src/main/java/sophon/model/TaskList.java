@@ -59,10 +59,10 @@ public class TaskList {
     }
 
     /**
-     * Returns tasks with descriptions containing the given keyword.
+     * Returns tasks whose descriptions match the given keyword exactly or fuzzily.
      *
-     * @param keyword keyword to search for
-     * @return matching tasks
+     * @param keyword keyword to search for.
+     * @return tasks with matching descriptions.
      */
     public TaskList find(String keyword) {
         ArrayList<Task> matchingTasks = tasks.stream()

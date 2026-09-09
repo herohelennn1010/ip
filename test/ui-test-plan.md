@@ -609,7 +609,8 @@ ____________________________________________________________
 
 ### TC-11: Find tasks by keyword
 
-Aim: Verify that Sophon lists tasks whose descriptions contain the given keyword and explains a missing keyword.
+Aim: Verify that Sophon finds exact, partial, case-insensitive, and fuzzy keyword matches and explains a missing
+keyword.
 
 Command:
 ```text
@@ -622,6 +623,9 @@ todo read book
 deadline return book /by 2019-10-15
 event project meeting /from 2019-10-15 /to 2019-10-16
 find book
+find boo
+find BOOK
+find bok
 find missing
 find
 bye
@@ -654,6 +658,21 @@ ____________________________________________________________
      Recorded. A new event has entered observation:
        [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
      3 tasks are currently under observation.
+____________________________________________________________
+____________________________________________________________
+     These signals match your search:
+     1.[T][ ] read book
+     2.[D][ ] return book (by: Oct 15 2019)
+____________________________________________________________
+____________________________________________________________
+     These signals match your search:
+     1.[T][ ] read book
+     2.[D][ ] return book (by: Oct 15 2019)
+____________________________________________________________
+____________________________________________________________
+     These signals match your search:
+     1.[T][ ] read book
+     2.[D][ ] return book (by: Oct 15 2019)
 ____________________________________________________________
 ____________________________________________________________
      These signals match your search:
