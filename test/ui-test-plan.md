@@ -1,692 +1,110 @@
 # UI Test Plan
 
-- Working directory: project root
-- Setup command: `powershell -NoProfile -Command "$sources = Get-ChildItem -Recurse -Filter *.java src\main\java; javac -encoding UTF-8 -d out\ui-test $sources.FullName"`
-- Comparison: exact text after normalizing line endings and trimming trailing spaces from each line
+Sophon uses a JavaFX graphical interface. Its GUI behavior is tested with TestFX and JUnit, while visual appearance
+and operating-system differences are checked manually.
 
-## Test Cases
+- Automated command: `.\gradlew.bat test --tests "sophon.ui.*Test"`
 
-### TC-01: Exit immediately
+## Automated GUI Tests
 
-Aim: Verify that Sophon greets the user and exits cleanly when the user enters `bye`.
+Run all automated tests from the project root with Java 25:
 
-Command:
 ```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
+.\gradlew.bat test
 ```
 
-Inputs:
+Run only the JavaFX GUI tests:
+
 ```text
-bye
+.\gradlew.bat test --tests "sophon.ui.*Test"
 ```
 
-Expected output:
-```text
-____________________________________________________________
- ____              _
-/ ___|  ___  _ __ | |__   ___  _ __
-\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
- ___) | (_) | |_) | | | | (_) | | | |
-|____/ \___/| .__/|_| |_|\___/|_| |_|
-            |_|
-     你好! I'm Sophon.
-     I'm listening.
-     What do you wish to communicate?
-____________________________________________________________
-____________________________________________________________
-     Our conversation ends here.
-     Until we meet again.
-____________________________________________________________
-```
+The automated GUI tests are in `src/test/java/sophon/ui/MainWindowTest.java`.
 
-### TC-10: Handle save path failure
+### GUI-01: Display the greeting
 
-Aim: Verify that Sophon shows a friendly message if the task list cannot be saved.
+Aim: Verify that opening the main window displays Sophon's greeting.
 
-Command:
-```text
-powershell -NoProfile -Command "$dataPath = Join-Path (Get-Location) 'data'; if (Test-Path -LiteralPath $dataPath) { $resolvedPath = (Resolve-Path -LiteralPath $dataPath).Path; if ($resolvedPath -eq $dataPath) { Remove-Item -LiteralPath $dataPath -Recurse -Force } }; [System.IO.File]::WriteAllText($dataPath, 'not a directory'); $commands = @('todo read book', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon; Remove-Item -LiteralPath $dataPath -Force -ErrorAction SilentlyContinue"
-```
+Steps performed automatically:
 
-Inputs:
-```text
+1. Open the JavaFX main window.
+2. Inspect the dialog container.
+3. Verify that exactly one initial dialog is displayed.
+4. Verify that the dialog contains `Hi. I'm Sophon.`.
 
-```
+### GUI-02: Send a todo
 
-Expected output:
-```text
-____________________________________________________________
- ____              _
-/ ___|  ___  _ __ | |__   ___  _ __
-\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
- ___) | (_) | |_) | | | | (_) | | | |
-|____/ \___/| .__/|_| |_|\___/|_| |_|
-            |_|
-     你好! I'm Sophon.
-     I'm listening.
-     What do you wish to communicate?
-____________________________________________________________
-____________________________________________________________
-     I could not save the task list.
-____________________________________________________________
-____________________________________________________________
-     Our conversation ends here.
-     Until we meet again.
-____________________________________________________________
-```
+Aim: Verify that entering a todo through the GUI displays both the user message and Sophon's response.
 
-### TC-08: Reject file separator in task details
+Steps performed automatically:
 
-Aim: Verify that Sophon rejects task details containing the save-file separator.
+1. Enter `todo read book` in the input field.
+2. Click the Send button.
+3. Verify that the user message is displayed.
+4. Verify that Sophon displays the successful add response.
 
-Command:
-```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
-```
+### GUI-03: Ignore blank input
 
-Inputs:
-```text
-todo read | book
-deadline return book /by June | 6
-event meeting /from 2pm | 3pm /to 4pm
-list
-bye
-```
+Aim: Verify that whitespace-only input does not create new dialogs.
 
-Expected output:
-```text
-____________________________________________________________
- ____              _
-/ ___|  ___  _ __ | |__   ___  _ __
-\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
- ___) | (_) | |_) | | | | (_) | | | |
-|____/ \___/| .__/|_| |_|\___/|_| |_|
-            |_|
-     你好! I'm Sophon.
-     I'm listening.
-     What do you wish to communicate?
-____________________________________________________________
-____________________________________________________________
-     Please do not use " | " in task details.
-____________________________________________________________
-____________________________________________________________
-     Please do not use " | " in task details.
-____________________________________________________________
-____________________________________________________________
-     Please do not use " | " in task details.
-____________________________________________________________
-____________________________________________________________
-     Current tasks under observation:
-____________________________________________________________
-____________________________________________________________
-     Our conversation ends here.
-     Until we meet again.
-____________________________________________________________
-```
+Steps performed automatically:
 
-### TC-09: Handle invalid save file
+1. Enter three spaces in the input field.
+2. Click the Send button.
+3. Verify that only the initial greeting dialog remains.
 
-Aim: Verify that Sophon shows a friendly startup message when `data\sophon.txt` is malformed.
+### GUI-04: Submit with Enter
 
-Command:
-```text
-powershell -NoProfile -Command "New-Item -ItemType Directory -Force -Path data | Out-Null; [System.IO.File]::WriteAllLines('data\sophon.txt', [string[]]@('X | 0 | mystery task'), [System.Text.UTF8Encoding]::new($false)); $commands = @('list', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
-```
+Aim: Verify that pressing Enter in the input field submits the message.
 
-Inputs:
-```text
+### GUI-05: Disable controls after bye
 
-```
+Aim: Verify that entering `bye` displays the farewell and immediately disables the input field and Send button.
 
-Expected output:
-```text
-____________________________________________________________
- ____              _
-/ ___|  ___  _ __ | |__   ___  _ __
-\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
- ___) | (_) | |_) | | | | (_) | | | |
-|____/ \___/| .__/|_| |_|\___/|_| |_|
-            |_|
-     你好! I'm Sophon.
-     I'm listening.
-     What do you wish to communicate?
-     The save file contains an unknown task type.
-____________________________________________________________
-____________________________________________________________
-     Current tasks under observation:
-____________________________________________________________
-____________________________________________________________
-     Our conversation ends here.
-     Until we meet again.
-____________________________________________________________
-```
+The delayed window closing remains covered by MANUAL-03 so the automated suite does not pause for three seconds.
 
-### TC-02: Add and list todos, deadlines, and events
+### GUI-06: Display dialog identities
 
-Aim: Verify that Sophon records all three task types and displays them in the task list.
+Aim: Verify that user and Sophon dialogs have the correct sender labels, style classes, avatars, and left/right order.
 
-Command:
-```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
-```
+### GUI-07: Configure the application window
 
-Inputs:
-```text
-todo read book
-deadline return book /by 2019-10-15
-event project meeting /from 2019-10-15 /to 2019-10-16
-list
-bye
-```
+Aim: Verify that the application window has the expected title, is resizable, and enforces its minimum dimensions.
 
-Expected output:
-```text
-____________________________________________________________
- ____              _
-/ ___|  ___  _ __ | |__   ___  _ __
-\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
- ___) | (_) | |_) | | | | (_) | | | |
-|____/ \___/| .__/|_| |_|\___/|_| |_|
-            |_|
-     你好! I'm Sophon.
-     I'm listening.
-     What do you wish to communicate?
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new task has entered observation:
-       [T][ ] read book
-     1 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new deadline has entered observation:
-       [D][ ] return book (by: Oct 15 2019)
-     2 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new event has entered observation:
-       [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
-     3 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     Current tasks under observation:
-     1.[T][ ] read book
-     2.[D][ ] return book (by: Oct 15 2019)
-     3.[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
-____________________________________________________________
-____________________________________________________________
-     Our conversation ends here.
-     Until we meet again.
-____________________________________________________________
-```
+## Automated Logic and Persistence Tests
 
-### TC-03: Handle malformed task commands and plain tasks
+The remaining JUnit tests cover parsing, task manipulation, search, response generation, saving, loading, malformed
+save files, and non-JavaFX message formatting. They run as part of `gradlew test`.
 
-Aim: Verify that Sophon does not crash on malformed typed commands, rejects tasks with missing fields, and explains unknown commands.
+## Manual Visual and Environment Tests
 
-Command:
-```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
-```
+Record the date, operating system, display resolution, scaling, result, and any observations for each test session.
 
-Inputs:
-```text
-todo
-todo 
-deadline
-deadline return book
-deadline return book /by
-deadline /by Sunday
-deadline /by
-deadline       return book       /by       2019-10-15
-event
-event project meeting
-event add /to
-event project meeting /from Mon 2pm
-event project meeting /from Mon 2pm /to
-event /from Mon 2pm /to 4pm
-event project meeting /from /to 4pm
-read book
-list
-bye
-```
+### MANUAL-01: Layout and readability
 
-Expected output:
-```text
-____________________________________________________________
- ____              _
-/ ___|  ___  _ __ | |__   ___  _ __
-\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
- ___) | (_) | |_) | | | | (_) | | | |
-|____/ \___/| .__/|_| |_|\___/|_| |_|
-            |_|
-     你好! I'm Sophon.
-     I'm listening.
-     What do you wish to communicate?
-____________________________________________________________
-____________________________________________________________
-     You have given me nothing to observe.
-     A todo requires a description.
-____________________________________________________________
-____________________________________________________________
-     You have given me nothing to observe.
-     A todo requires a description.
-____________________________________________________________
-____________________________________________________________
-     You have told me neither what must be done nor when.
-     A deadline requires both.
-____________________________________________________________
-____________________________________________________________
-     I know what must be done, but not when.
-     Specify when it is due using /by.
-____________________________________________________________
-____________________________________________________________
-     I see the task, but its deadline remains unknown.
-     Tell me when it is due.
-____________________________________________________________
-____________________________________________________________
-     I know when, but not what.
-     Give the deadline a description.
-____________________________________________________________
-____________________________________________________________
-     You have given me a boundary, but nothing to bind to it.
-     Tell me what must be done, and when.
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new deadline has entered observation:
-       [D][ ] return book (by: Oct 15 2019)
-     1 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     You have told me neither what will happen nor when.
-     An event requires both.
-____________________________________________________________
-____________________________________________________________
-     I know what will happen, but not when.
-     Tell me when it begins and when it ends.
-____________________________________________________________
-____________________________________________________________
-     I see when it ends, but not when it begins.
-     Tell me when it begins.
-____________________________________________________________
-____________________________________________________________
-     I see when it begins, but not when it ends.
-     Specify an end time using /to.
-____________________________________________________________
-____________________________________________________________
-     I see when it begins, but its end remains unknown.
-     Tell me when it ends.
-____________________________________________________________
-____________________________________________________________
-     I know when, but not what.
-     Give the event a description.
-____________________________________________________________
-____________________________________________________________
-     I see when it ends, but not when it begins.
-     Tell me when it begins.
-____________________________________________________________
-____________________________________________________________
-     Your message has been observed.
-     Its meaning, however, remains unknown.
-____________________________________________________________
-____________________________________________________________
-     Current tasks under observation:
-     1.[D][ ] return book (by: Oct 15 2019)
-____________________________________________________________
-____________________________________________________________
-     Our conversation ends here.
-     Until we meet again.
-____________________________________________________________
-```
+1. Start Sophon with `gradlew run`.
+2. Verify that the greeting, input field, Send button, scrollbar, and avatars are visible and do not overlap.
+3. Send short and long messages and verify that text wraps without being cut off.
 
-### TC-04: Delete tasks and handle invalid delete commands
+### MANUAL-02: Scrolling
 
-Aim: Verify that Sophon removes the requested task, keeps the remaining tasks listed correctly, and explains invalid delete commands.
+1. Add enough tasks or messages to exceed the visible window height.
+2. Verify that the conversation scrolls to the latest message.
+3. Verify that earlier messages remain reachable with the scrollbar.
 
-Command:
-```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
-```
+### MANUAL-03: Exit behavior
 
-Inputs:
-```text
-delete
-delete abc
-delete 1
-todo read book
-todo borrow book
-delete 0
-delete 3
-delete 1
-list
-bye
-```
+1. Enter `bye`.
+2. Verify that the farewell message appears.
+3. Verify that the window closes after approximately three seconds.
 
-Expected output:
-```text
-____________________________________________________________
- ____              _
-/ ___|  ___  _ __ | |__   ___  _ __
-\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
- ___) | (_) | |_) | | | | (_) | | | |
-|____/ \___/| .__/|_| |_|\___/|_| |_|
-            |_|
-     你好! I'm Sophon.
-     I'm listening.
-     What do you wish to communicate?
-____________________________________________________________
-____________________________________________________________
-     Tell me which task to remove.
-____________________________________________________________
-____________________________________________________________
-     Task numbers must be written as numerals.
-____________________________________________________________
-____________________________________________________________
-     No task exists at that number.
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new task has entered observation:
-       [T][ ] read book
-     1 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new task has entered observation:
-       [T][ ] borrow book
-     2 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     No task exists at that number.
-____________________________________________________________
-____________________________________________________________
-     No task exists at that number.
-____________________________________________________________
-____________________________________________________________
-     Removed. This task is no longer under observation:
-       [T][ ] read book
-     1 tasks remain under observation.
-____________________________________________________________
-____________________________________________________________
-     Current tasks under observation:
-     1.[T][ ] borrow book
-____________________________________________________________
-____________________________________________________________
-     Our conversation ends here.
-     Until we meet again.
-____________________________________________________________
-```
+### MANUAL-04: Display settings
 
-### TC-05: Mark and unmark tasks with invalid inputs
+Repeat MANUAL-01 using the available display resolutions and scaling settings, especially 100%, 125%, and 150%.
+Record only the configurations that were actually tested.
 
-Aim: Verify that Sophon marks and unmarks valid tasks, and explains invalid mark and unmark commands.
+### MANUAL-05: Operating-system and language settings
 
-Command:
-```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
-```
-
-Inputs:
-```text
-mark
-mark abc
-mark 1
-unmark
-unmark xyz
-unmark 1
-todo read book
-mark 0
-mark 2
-mark 1
-unmark 0
-unmark 2
-unmark 1
-list
-bye
-```
-
-Expected output:
-```text
-____________________________________________________________
- ____              _
-/ ___|  ___  _ __ | |__   ___  _ __
-\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
- ___) | (_) | |_) | | | | (_) | | | |
-|____/ \___/| .__/|_| |_|\___/|_| |_|
-            |_|
-     你好! I'm Sophon.
-     I'm listening.
-     What do you wish to communicate?
-____________________________________________________________
-____________________________________________________________
-     Tell me which task has completed its observation.
-____________________________________________________________
-____________________________________________________________
-     Task numbers must be written as numerals.
-____________________________________________________________
-____________________________________________________________
-     No task exists at that number.
-____________________________________________________________
-____________________________________________________________
-     Tell me which task has returned to observation.
-____________________________________________________________
-____________________________________________________________
-     Task numbers must be written as numerals.
-____________________________________________________________
-____________________________________________________________
-     No task exists at that number.
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new task has entered observation:
-       [T][ ] read book
-     1 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     No task exists at that number.
-____________________________________________________________
-____________________________________________________________
-     No task exists at that number.
-____________________________________________________________
-____________________________________________________________
-     Acknowledged. This task is now complete:
-       [T][X] read book
-____________________________________________________________
-____________________________________________________________
-     No task exists at that number.
-____________________________________________________________
-____________________________________________________________
-     No task exists at that number.
-____________________________________________________________
-____________________________________________________________
-     Reverted. This task is once again incomplete:
-       [T][ ] read book
-____________________________________________________________
-____________________________________________________________
-     Current tasks under observation:
-     1.[T][ ] read book
-____________________________________________________________
-____________________________________________________________
-     Our conversation ends here.
-     Until we meet again.
-____________________________________________________________
-```
-
-### TC-06: Save tasks after changes
-
-Aim: Verify that Sophon writes the latest task list to `data\sophon.txt` after add, mark, and delete commands.
-
-Command:
-```text
-powershell -NoProfile -Command "$commands = @('todo read book', 'deadline return book /by 2019-10-15', 'event project meeting /from 2019-10-15 /to 2019-10-16', 'mark 1', 'delete 2', 'bye') -join [Environment]::NewLine; Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon; 'SAVED FILE:'; Get-Content -LiteralPath 'data\sophon.txt'"
-```
-
-Inputs:
-```text
-
-```
-
-Expected output:
-```text
-____________________________________________________________
- ____              _
-/ ___|  ___  _ __ | |__   ___  _ __
-\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
- ___) | (_) | |_) | | | | (_) | | | |
-|____/ \___/| .__/|_| |_|\___/|_| |_|
-            |_|
-     你好! I'm Sophon.
-     I'm listening.
-     What do you wish to communicate?
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new task has entered observation:
-       [T][ ] read book
-     1 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new deadline has entered observation:
-       [D][ ] return book (by: Oct 15 2019)
-     2 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new event has entered observation:
-       [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
-     3 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     Acknowledged. This task is now complete:
-       [T][X] read book
-____________________________________________________________
-____________________________________________________________
-     Removed. This task is no longer under observation:
-       [D][ ] return book (by: Oct 15 2019)
-     2 tasks remain under observation.
-____________________________________________________________
-____________________________________________________________
-     Our conversation ends here.
-     Until we meet again.
-____________________________________________________________
-SAVED FILE:
-T | 1 | read book
-E | 0 | project meeting | 2019-10-15 | 2019-10-16
-```
-
-### TC-07: Load tasks on startup
-
-Aim: Verify that Sophon loads todos, deadlines, and events from `data\sophon.txt` when it starts.
-
-Command:
-```text
-powershell -NoProfile -Command "New-Item -ItemType Directory -Force -Path data | Out-Null; [System.IO.File]::WriteAllLines('data\sophon.txt', [string[]]@('T | 1 | read book', 'D | 0 | return book | 2019-10-15', 'E | 0 | project meeting | 2019-10-15 | 2019-10-16'), [System.Text.UTF8Encoding]::new($false)); $commands = @('list', 'bye') -join [Environment]::NewLine; $commands | java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
-```
-
-Inputs:
-```text
-
-```
-
-Expected output:
-```text
-____________________________________________________________
- ____              _
-/ ___|  ___  _ __ | |__   ___  _ __
-\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
- ___) | (_) | |_) | | | | (_) | | | |
-|____/ \___/| .__/|_| |_|\___/|_| |_|
-            |_|
-     你好! I'm Sophon.
-     I'm listening.
-     What do you wish to communicate?
-____________________________________________________________
-____________________________________________________________
-     Current tasks under observation:
-     1.[T][X] read book
-     2.[D][ ] return book (by: Oct 15 2019)
-     3.[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
-____________________________________________________________
-____________________________________________________________
-     Our conversation ends here.
-     Until we meet again.
-____________________________________________________________
-```
-
-### TC-11: Find tasks by keyword
-
-Aim: Verify that Sophon finds exact, partial, case-insensitive, and fuzzy keyword matches and explains a missing
-keyword.
-
-Command:
-```text
-powershell -NoProfile -Command "Remove-Item -LiteralPath 'data\sophon.txt' -ErrorAction SilentlyContinue; java '-Dfile.encoding=UTF-8' '-Dsun.stdout.encoding=UTF-8' '-Dsun.stderr.encoding=UTF-8' -cp out\ui-test sophon.Sophon"
-```
-
-Inputs:
-```text
-todo read book
-deadline return book /by 2019-10-15
-event project meeting /from 2019-10-15 /to 2019-10-16
-find book
-find boo
-find BOOK
-find bok
-find missing
-find
-bye
-```
-
-Expected output:
-```text
-____________________________________________________________
- ____              _
-/ ___|  ___  _ __ | |__   ___  _ __
-\___ \ / _ \| '_ \| '_ \ / _ \| '_ \
- ___) | (_) | |_) | | | | (_) | | | |
-|____/ \___/| .__/|_| |_|\___/|_| |_|
-            |_|
-     你好! I'm Sophon.
-     I'm listening.
-     What do you wish to communicate?
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new task has entered observation:
-       [T][ ] read book
-     1 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new deadline has entered observation:
-       [D][ ] return book (by: Oct 15 2019)
-     2 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     Recorded. A new event has entered observation:
-       [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
-     3 tasks are currently under observation.
-____________________________________________________________
-____________________________________________________________
-     These signals match your search:
-     1.[T][ ] read book
-     2.[D][ ] return book (by: Oct 15 2019)
-____________________________________________________________
-____________________________________________________________
-     These signals match your search:
-     1.[T][ ] read book
-     2.[D][ ] return book (by: Oct 15 2019)
-____________________________________________________________
-____________________________________________________________
-     These signals match your search:
-     1.[T][ ] read book
-     2.[D][ ] return book (by: Oct 15 2019)
-____________________________________________________________
-____________________________________________________________
-     These signals match your search:
-     1.[T][ ] read book
-     2.[D][ ] return book (by: Oct 15 2019)
-____________________________________________________________
-____________________________________________________________
-     These signals match your search:
-____________________________________________________________
-____________________________________________________________
-     Tell me what signal to search for.
-____________________________________________________________
-____________________________________________________________
-     Our conversation ends here.
-     Until we meet again.
-____________________________________________________________
-```
+Run the application on each available operating system and, where practical, with English and Chinese system
+language settings. Verify that Sophon starts, accepts input, saves tasks, and displays text correctly. Do not record an
+environment as passed unless it was actually tested.
