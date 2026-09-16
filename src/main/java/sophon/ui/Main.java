@@ -24,8 +24,8 @@ public class Main extends Application {
             mainWindow.setSophon(sophon, stage);
 
             stage.setTitle("Sophon · Deep Space Interface");
-            stage.setResizable(false);
-            stage.setMinHeight(680.0);
+            stage.setResizable(true);
+            stage.setMinHeight(620.0);
             stage.setMinWidth(460.0);
             stage.setScene(new Scene(root));
             stage.show();

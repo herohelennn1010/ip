@@ -50,6 +50,7 @@ public class DialogBox extends HBox {
         profilePicture.setImage(i);
         getStyleClass().add("dialog-box");
         messageColumn.getStyleClass().add("message-column");
+        messageColumn.maxWidthProperty().bind(widthProperty().multiply(0.72));
     }
 
     private void flip() {
@@ -69,8 +70,6 @@ public class DialogBox extends HBox {
     public static DialogBox getUserDialog(String s, Image i) {
         DialogBox dialogBox = new DialogBox(s, i);
         dialogBox.sender.setText("YOU · TRANSMISSION");
-        dialogBox.profilePicture.setManaged(false);
-        dialogBox.profilePicture.setVisible(false);
         dialogBox.getStyleClass().add("user-dialog");
         return dialogBox;
     }
