@@ -26,6 +26,16 @@ chat interface.
 5. Enter a command in the message field and press **Enter** or select
    **Transmit**.
 
+Some Java distributions bundle JavaFX as named modules. If Java prints a
+native-access warning when Sophon starts, use this equivalent command:
+
+```text
+java --enable-native-access=javafx.graphics -jar sophon.jar
+```
+
+The warning does not indicate that Sophon failed to start. It warns that a
+future Java release may require the option above.
+
 > [!TIP]
 > Dates must use the `yyyy-MM-dd` format. For example, Christmas Day 2026 is
 > written as `2026-12-25`.

@@ -52,7 +52,7 @@ public class SophonTest {
         assertEquals("No task exists at that number.", sophon.getResponse("delete 1"));
         assertEquals("Your message has been observed.\nIts meaning, however, remains unknown.",
                 sophon.getResponse("hello"));
-        assertEquals("Our conversation ends here.\nUntil we meet again.\n", sophon.getResponse("bye"));
+        assertEquals("Our conversation ends here.\nUntil we meet again.", sophon.getResponse("bye"));
     }
 
     @Test
