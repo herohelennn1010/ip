@@ -30,7 +30,7 @@ public class Ui {
      */
     public String getByeMessage() {
         return "Our conversation ends here.\n"
-                + "Until we meet again.\n";
+                + "Until we meet again.";
     }
 
     /**

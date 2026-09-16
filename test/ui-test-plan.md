@@ -60,7 +60,8 @@ Aim: Verify that pressing Enter in the input field submits the message.
 
 ### GUI-05: Disable controls after bye
 
-Aim: Verify that entering `bye` displays the farewell and immediately disables the input field and Send button.
+Aim: Verify that entering `bye` displays the complete two-line farewell and immediately disables the input field and
+Send button.
 
 The delayed window closing remains covered by MANUAL-03 so the automated suite does not pause for three seconds.
 

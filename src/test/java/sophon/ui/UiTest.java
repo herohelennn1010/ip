@@ -21,7 +21,7 @@ public class UiTest {
     public void messages_returnExpectedText() {
         Ui ui = new Ui();
 
-        assertEquals("Our conversation ends here.\nUntil we meet again.\n", ui.getByeMessage());
+        assertEquals("Our conversation ends here.\nUntil we meet again.", ui.getByeMessage());
         assertEquals("problem", ui.getError("problem"));
     }
 

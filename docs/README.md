@@ -1,193 +1,182 @@
 # Sophon User Guide
 
-Sophon is a command-line chatbot that helps you track todos, deadlines, and
-events. It saves your task list automatically, so your tasks are still there
-the next time you start the chatbot from the same project folder.
+Sophon is a desktop task chatbot for tracking todos, deadlines, and events.
+It remembers your tasks between sessions and responds through a space-themed
+chat interface.
 
-## Quick Start
+![Sophon application window](Ui.png)
 
-Run Sophon, type one command at a time, and press Enter after each command.
+## Contents
 
-Common commands:
+- [Quick start](#quick-start)
+- [Command summary](#command-summary)
+- [Adding tasks](#adding-tasks)
+- [Viewing and finding tasks](#viewing-and-finding-tasks)
+- [Updating tasks](#updating-tasks)
+- [Saving and loading](#saving-and-loading)
+- [Handling mistakes](#handling-mistakes)
+- [Exiting](#exiting)
 
-```text
-todo read book
-deadline return book /by 2019-10-15
-event project meeting /from 2019-10-15 /to 2019-10-16
-list
-find book
-mark 1
-unmark 1
-delete 1
-bye
-```
+## Quick start
 
-## Adding ToDos
+1. Install Java 25.
+2. Download `sophon.jar` from the latest GitHub release.
+3. Open a terminal in the folder containing the JAR file.
+4. Run `java -jar sophon.jar`.
+5. Enter a command in the message field and press **Enter** or select
+   **Transmit**.
 
-Type `todo`, followed by the task description.
+> [!TIP]
+> Dates must use the `yyyy-MM-dd` format. For example, Christmas Day 2026 is
+> written as `2026-12-25`.
 
-Example:
+## Command summary
+
+| Action | Command format | Example |
+|---|---|---|
+| Add a todo | `todo DESCRIPTION` | `todo borrow book` |
+| Add a deadline | `deadline DESCRIPTION /by DATE` | `deadline return book /by 2026-09-20` |
+| Add an event | `event DESCRIPTION /from DATE /to DATE` | `event project meeting /from 2026-09-20 /to 2026-09-21` |
+| View all tasks | `list` | `list` |
+| Find tasks | `find KEYWORD` | `find book` |
+| Mark a task as complete | `mark NUMBER` | `mark 2` |
+| Mark a task as incomplete | `unmark NUMBER` | `unmark 2` |
+| Delete a task | `delete NUMBER` | `delete 2` |
+| Exit Sophon | `bye` | `bye` |
+
+## Adding tasks
+
+### Adding a todo
+
+Use `todo` followed by a description:
 
 ```text
 todo borrow book
-    ____________________________________________________________
-     Recorded. A new task has entered observation:
-       [T][ ] borrow book
-     1 tasks are currently under observation.
-    ____________________________________________________________
 ```
 
-Sophon rejects a todo if the description is missing.
-
-## Adding Deadlines
-
-Type `deadline`, followed by the task description, `/by`, and the deadline
-date in `yyyy-MM-dd` format.
-
-Example:
+Sophon responds with the saved task:
 
 ```text
-deadline return book /by 2019-10-15
-    ____________________________________________________________
-     Recorded. A new deadline has entered observation:
-       [D][ ] return book (by: Oct 15 2019)
-     1 tasks are currently under observation.
-    ____________________________________________________________
+Recorded. A new task has entered observation:
+  [T][ ] borrow book
+1 tasks are currently under observation.
 ```
 
-Sophon rejects a deadline if the description, `/by`, or deadline date is
-missing or not in `yyyy-MM-dd` format.
+### Adding a deadline
 
-## Adding Events
-
-Type `event`, followed by the task description, `/from`, the start, `/to`, and
-the end. Start and end dates must be in `yyyy-MM-dd` format.
-
-Example:
+Use `deadline`, a description, `/by`, and a date:
 
 ```text
-event project meeting /from 2019-10-15 /to 2019-10-16
-    ____________________________________________________________
-     Recorded. A new event has entered observation:
-       [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
-     1 tasks are currently under observation.
-    ____________________________________________________________
+deadline return book /by 2026-09-20
 ```
-
-Sophon rejects an event if the description, start date, or end date is missing
-or not in `yyyy-MM-dd` format.
-
-## Listing Tasks
-
-Type `list` and press Enter to view the tasks added so far.
-
-Example:
 
 ```text
-list
-    ____________________________________________________________
-     Current tasks under observation:
-     1.[T][ ] borrow book
-     2.[D][ ] return book (by: Oct 15 2019)
-     3.[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
-    ____________________________________________________________
+Recorded. A new deadline has entered observation:
+  [D][ ] return book (by: Sep 20 2026)
+1 tasks are currently under observation.
 ```
 
-## Finding Tasks
+### Adding an event
 
-Type `find`, followed by a search term, to view matching tasks. Search is
-case-insensitive, accepts partial words, and tolerates small typing errors. For
-example, `find bok` matches tasks containing `book`.
+Use `event`, a description, `/from`, the start date, `/to`, and the end date:
 
-Example:
+```text
+event project meeting /from 2026-09-20 /to 2026-09-21
+```
+
+```text
+Recorded. A new event has entered observation:
+  [E][ ] project meeting (from: Sep 20 2026 to: Sep 21 2026)
+1 tasks are currently under observation.
+```
+
+## Viewing and finding tasks
+
+### Listing all tasks
+
+Enter `list` to see every saved task and its current number:
+
+```text
+Current tasks under observation:
+1.[T][ ] borrow book
+2.[D][ ] return book (by: Sep 20 2026)
+3.[E][ ] project meeting (from: Sep 20 2026 to: Sep 21 2026)
+```
+
+### Finding tasks
+
+Use `find` followed by a search term:
 
 ```text
 find book
-    ____________________________________________________________
-     These signals match your search:
-     1.[T][ ] borrow book
-     2.[D][ ] return book (by: Oct 15 2019)
-    ____________________________________________________________
 ```
 
-The number of tolerated typing errors depends on the length of the word. Short
-words require closer matches to reduce unrelated results.
+Search is case-insensitive, accepts partial words, and tolerates small typing
+errors. For example, `find bok` can match a task containing `book`. Short words
+require closer matches to avoid unrelated results.
 
-## Marking Tasks
+## Updating tasks
 
-Type `mark` followed by a task number to mark that task as done. Type `unmark`
-followed by a task number to mark it as not done.
+Task numbers come from the most recent `list` output.
 
-Example:
+### Marking a task
+
+Use `mark NUMBER` to mark a task as complete:
 
 ```text
 mark 2
-    ____________________________________________________________
-     Acknowledged. This task is now complete:
-       [T][X] borrow book
-    ____________________________________________________________
 ```
 
-Example:
+Use `unmark NUMBER` to mark it as incomplete again:
 
 ```text
 unmark 2
-    ____________________________________________________________
-     Reverted. This task is once again incomplete:
-       [T][ ] borrow book
-    ____________________________________________________________
 ```
 
-## Deleting Tasks
+`[X]` represents a completed task, while `[ ]` represents an incomplete task.
 
-Type `delete` followed by a task number to remove that task.
+### Deleting a task
 
-Example:
+Use `delete NUMBER` to remove a task permanently:
 
 ```text
 delete 2
-     ____________________________________________________________
-     Removed. This task is no longer under observation:
-       [D][ ] return book (by: Oct 15 2019)
-     2 tasks remain under observation.
-    ____________________________________________________________
 ```
 
-## Saving and Loading
+Task numbers may change after deletion. Enter `list` again before updating
+another task if you are unsure of its new number.
 
-Sophon saves the task list automatically after you add, mark, unmark, or delete
-a task. The save file is stored at `data/sophon.txt` relative to the project
-folder.
+## Saving and loading
 
-If the save file or `data` folder does not exist yet, Sophon starts normally.
-The folder and file are created automatically the first time Sophon saves your
-tasks.
+Sophon saves automatically after adding, marking, unmarking, or deleting a
+task. Saved data is stored in `data/sophon.txt`, relative to the folder from
+which Sophon is launched.
 
-Do not type ` | ` inside task details, because Sophon uses that separator in
-the save file.
+If the `data` folder or save file does not exist, Sophon starts with an empty
+task list and creates them when it first saves. If an existing file cannot be
+read, Sophon displays a warning and starts safely with an empty list.
 
-## Handling Mistakes
+> [!WARNING]
+> Do not include ` | ` in task descriptions. Sophon uses that sequence to
+> separate fields in its save file.
 
-If Sophon cannot understand a command or a command is missing required details,
-it shows an explanation instead of crashing.
+## Handling mistakes
 
-Examples:
+Sophon explains malformed commands instead of terminating unexpectedly.
 
-```text
-todo
-    ____________________________________________________________
-     You have given me nothing to observe.
-     A todo requires a description.
-    ____________________________________________________________
-```
+| Input | Problem |
+|---|---|
+| `todo` | The todo description is missing. |
+| `deadline return book` | The `/by` date is missing. |
+| `event meeting /from 2026-09-20` | The `/to` date is missing. |
+| `mark abc` | Task numbers must be numerals. |
+| `delete 99` | No task exists at that number. |
+| `find` | The search term is missing. |
 
-```text
-mark abc
-    ____________________________________________________________
-     Task numbers must be written as numerals.
-    ____________________________________________________________
-```
+For an unknown command, Sophon reports that it could not determine the
+message's meaning. Correct the command and try again.
 
 ## Exiting
 
-Type `bye` and press Enter to end the conversation.
+Enter `bye` to display Sophon's farewell. The application disables further
+input and closes after approximately three seconds.
