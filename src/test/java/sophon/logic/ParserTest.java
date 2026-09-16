@@ -102,4 +102,34 @@ public class ParserTest {
         assertEquals("Please do not use \" | \" in task details.", deadlineException.getMessage());
         assertEquals("Please do not use \" | \" in task details.", eventException.getMessage());
     }
+
+    @Test
+    public void parse_incompleteTaskCommands_throwsSpecificExceptions() {
+        assertParseFailure("todo", "You have given me nothing to observe.\nA todo requires a description.");
+        assertParseFailure("deadline", "You have told me neither what must be done nor when.\n"
+                + "A deadline requires both.");
+        assertParseFailure("deadline return book", "I know what must be done, but not when.\n"
+                + "Specify when it is due using /by.");
+        assertParseFailure("deadline return book /by", "I see the task, but its deadline remains unknown.\n"
+                + "Tell me when it is due.");
+        assertParseFailure("deadline /by 2019-10-15", "I know when, but not what.\n"
+                + "Give the deadline a description.");
+        assertParseFailure("event", "You have told me neither what will happen nor when.\n"
+                + "An event requires both.");
+        assertParseFailure("event meeting", "I know what will happen, but not when.\n"
+                + "Tell me when it begins and when it ends.");
+        assertParseFailure("event meeting /to 2019-10-16", "I see when it ends, but not when it begins.\n"
+                + "Tell me when it begins.");
+        assertParseFailure("event meeting /from 2019-10-15", "I see when it begins, but not when it ends.\n"
+                + "Specify an end time using /to.");
+        assertParseFailure("event meeting /from 2019-10-15 /to", "I see when it begins, but its end remains unknown.\n"
+                + "Tell me when it ends.");
+        assertParseFailure("event /from 2019-10-15 /to 2019-10-16", "I know when, but not what.\n"
+                + "Give the event a description.");
+    }
+
+    private void assertParseFailure(String input, String expectedMessage) {
+        SophonException exception = assertThrows(SophonException.class, () -> Parser.parse(input));
+        assertEquals(expectedMessage, exception.getMessage());
+    }
 }

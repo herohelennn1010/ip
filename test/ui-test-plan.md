@@ -3,7 +3,7 @@
 Sophon uses a JavaFX graphical interface. Its GUI behavior is tested with TestFX and JUnit, while visual appearance
 and operating-system differences are checked manually.
 
-- Automated command: `.\gradlew.bat test --tests sophon.ui.MainWindowTest`
+- Automated command: `.\gradlew.bat test --tests "sophon.ui.*Test"`
 
 ## Automated GUI Tests
 
@@ -16,7 +16,7 @@ Run all automated tests from the project root with Java 25:
 Run only the JavaFX GUI tests:
 
 ```text
-.\gradlew.bat test --tests sophon.ui.MainWindowTest
+.\gradlew.bat test --tests "sophon.ui.*Test"
 ```
 
 The automated GUI tests are in `src/test/java/sophon/ui/MainWindowTest.java`.
@@ -53,6 +53,24 @@ Steps performed automatically:
 2. Click the Send button.
 3. Verify that only the initial greeting dialog remains.
 
+### GUI-04: Submit with Enter
+
+Aim: Verify that pressing Enter in the input field submits the message.
+
+### GUI-05: Disable controls after bye
+
+Aim: Verify that entering `bye` displays the farewell and immediately disables the input field and Send button.
+
+The delayed window closing remains covered by MANUAL-03 so the automated suite does not pause for three seconds.
+
+### GUI-06: Display dialog identities
+
+Aim: Verify that user and Sophon dialogs have the correct sender labels, style classes, avatars, and left/right order.
+
+### GUI-07: Configure the application window
+
+Aim: Verify that the application window has the expected title, is resizable, and enforces its minimum dimensions.
+
 ## Automated Logic and Persistence Tests
 
 The remaining JUnit tests cover parsing, task manipulation, search, response generation, saving, loading, malformed
@@ -78,8 +96,7 @@ Record the date, operating system, display resolution, scaling, result, and any 
 
 1. Enter `bye`.
 2. Verify that the farewell message appears.
-3. Verify that the input field and Send button become disabled.
-4. Verify that the window closes after approximately three seconds.
+3. Verify that the window closes after approximately three seconds.
 
 ### MANUAL-04: Display settings
 
