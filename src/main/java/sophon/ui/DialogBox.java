@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 /**
  * Shows one chat message with an avatar.
@@ -19,6 +20,12 @@ import javafx.scene.layout.HBox;
 public class DialogBox extends HBox {
     @FXML
     private Label text;
+
+    @FXML
+    private Label sender;
+
+    @FXML
+    private VBox messageColumn;
 
     @FXML
     private ImageView profilePicture;
@@ -41,6 +48,8 @@ public class DialogBox extends HBox {
 
         text.setText(s);
         profilePicture.setImage(i);
+        getStyleClass().add("dialog-box");
+        messageColumn.getStyleClass().add("message-column");
     }
 
     private void flip() {
@@ -58,7 +67,12 @@ public class DialogBox extends HBox {
      * @return dialog box for a user message.
      */
     public static DialogBox getUserDialog(String s, Image i) {
-        return new DialogBox(s, i);
+        DialogBox dialogBox = new DialogBox(s, i);
+        dialogBox.sender.setText("YOU · TRANSMISSION");
+        dialogBox.profilePicture.setManaged(false);
+        dialogBox.profilePicture.setVisible(false);
+        dialogBox.getStyleClass().add("user-dialog");
+        return dialogBox;
     }
 
     /**
@@ -70,6 +84,8 @@ public class DialogBox extends HBox {
      */
     public static DialogBox getSophonDialog(String s, Image i) {
         var db = new DialogBox(s, i);
+        db.sender.setText("SOPHON · RESPONSE");
+        db.getStyleClass().add("sophon-dialog");
         db.flip();
         return db;
     }
