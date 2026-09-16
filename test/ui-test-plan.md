@@ -31,6 +31,7 @@ Steps performed automatically:
 2. Inspect the dialog container.
 3. Verify that exactly one initial dialog is displayed.
 4. Verify that the dialog contains `Hi. I'm Sophon.`.
+5. Verify that the complete greeting remains visible instead of being shortened with an ellipsis.
 
 ### GUI-02: Send a todo
 

@@ -38,7 +38,10 @@ public class Storage {
      * @throws IOException if the file cannot be written.
      */
     public void saveTasks(TaskList tasks) throws IOException {
-        Files.createDirectories(filePath.getParent());
+        Path parentDirectory = filePath.getParent();
+        if (parentDirectory != null) {
+            Files.createDirectories(parentDirectory);
+        }
 
         ArrayList<String> lines = new ArrayList<>();
         for (int i = 0; i < tasks.size(); i++) {

@@ -12,12 +12,15 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 /**
  * Shows one chat message with an avatar.
  */
 public class DialogBox extends HBox {
+    private static final double MAX_MESSAGE_HEIGHT = 300.0;
+
     @FXML
     private Label text;
 
@@ -47,6 +50,8 @@ public class DialogBox extends HBox {
         }
 
         text.setText(s);
+        text.setMinHeight(Region.USE_PREF_SIZE);
+        text.setMaxHeight(MAX_MESSAGE_HEIGHT);
         profilePicture.setImage(i);
         getStyleClass().add("dialog-box");
         messageColumn.getStyleClass().add("message-column");

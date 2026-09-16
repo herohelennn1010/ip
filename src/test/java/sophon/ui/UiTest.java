@@ -13,7 +13,7 @@ public class UiTest {
     public void getGreeting_withAndWithoutWarning_returnsExpectedContent() {
         Ui ui = new Ui();
 
-        assertTrue(ui.getGreeting(null).endsWith("What do you wish to communicate?\n"));
+        assertTrue(ui.getGreeting(null).endsWith("What do you wish to communicate?"));
         assertTrue(ui.getGreeting("Could not load.").endsWith("Could not load."));
     }
 

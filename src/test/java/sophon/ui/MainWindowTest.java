@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sophon.Sophon;
@@ -51,9 +52,16 @@ public class MainWindowTest extends ApplicationTest {
     @Test
     public void start_displaysGreeting() {
         Set<String> messages = getDisplayedMessages();
+        Label greeting = (Label) dialogContainer.lookup(".message");
+        greeting.getScene().getRoot().applyCss();
+        greeting.getScene().getRoot().layout();
 
         assertEquals(1, dialogContainer.getChildren().size());
         assertTrue(messages.stream().anyMatch(message -> message.contains("Hi. I'm Sophon.")));
+        assertTrue(greeting.getText().contains("What do you wish to communicate?"));
+        assertEquals(Region.USE_PREF_SIZE, greeting.getMinHeight());
+        assertEquals(300.0, greeting.getMaxHeight());
+        assertTrue(greeting.getHeight() >= greeting.prefHeight(greeting.getWidth()));
     }
 
     @Test

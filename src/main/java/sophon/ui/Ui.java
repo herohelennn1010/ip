@@ -6,12 +6,7 @@ import sophon.model.TaskList;
  * Handles console output shown to the user.
  */
 public class Ui {
-    private static final String BANNER = " ____              _                 \n"
-            + "/ ___|  ___  _ __ | |__   ___  _ __ \n"
-            + "\\___ \\ / _ \\| '_ \\| '_ \\ / _ \\| '_ \\\n"
-            + " ___) | (_) | |_) | | | | (_) | | | |\n"
-            + "|____/ \\___/| .__/|_| |_|\\___/|_| |_|\n"
-            + "            |_|                       \n";
+    private static final String BANNER = "─── S O P H O N ───\n";
 
 
     /**
@@ -22,7 +17,7 @@ public class Ui {
     public String getGreeting(String startupWarning) {
         String greeting = "Hi. I'm Sophon.\n"
                 + "I'm listening.\n"
-                + "What do you wish to communicate?\n";
+                + "What do you wish to communicate?";
 
         if (startupWarning == null) {
             return BANNER + greeting;

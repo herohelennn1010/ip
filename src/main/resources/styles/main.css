@@ -85,6 +85,7 @@
 }
 
 .sophon-dialog .message {
+    -fx-font-family: "Consolas";
     -fx-background-color: rgba(8, 25, 48, 0.88);
     -fx-background-radius: 3 15 15 15;
     -fx-border-color: rgba(85, 210, 255, 0.48);

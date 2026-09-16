@@ -49,6 +49,22 @@ public class StorageTest {
     }
 
     @Test
+    public void saveTasks_fileWithoutParent_savesSuccessfully() throws IOException {
+        Path saveFile = Path.of("sophon-storage-test-" + System.nanoTime() + ".txt");
+        try {
+            Storage storage = new Storage(saveFile.toString());
+            TaskList tasks = new TaskList();
+            tasks.add(new Todo("read book"));
+
+            storage.saveTasks(tasks);
+
+            assertEquals("T | 0 | read book", Files.readString(saveFile).trim());
+        } finally {
+            Files.deleteIfExists(saveFile);
+        }
+    }
+
+    @Test
     public void loadTasks_blankLines_ignoresBlankLines() throws IOException, SophonException {
         Storage storage = storageWithLines("", "T | 0 | read book", "   ");
 
