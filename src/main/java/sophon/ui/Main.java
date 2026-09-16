@@ -23,10 +23,10 @@ public class Main extends Application {
             MainWindow mainWindow = fxmlLoader.getController();
             mainWindow.setSophon(sophon, stage);
 
-            stage.setTitle("Sophon");
-            stage.setResizable(false);
-            stage.setMinHeight(600.0);
-            stage.setMinWidth(400.0);
+            stage.setTitle("Sophon · Deep Space Interface");
+            stage.setResizable(true);
+            stage.setMinHeight(620.0);
+            stage.setMinWidth(460.0);
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
