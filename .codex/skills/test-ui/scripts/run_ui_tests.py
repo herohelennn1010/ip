@@ -1,4 +1,4 @@
-"""Run console UI tests described in test/ui-test-plan.md."""
+"""Run automated UI tests described in test/ui-test-plan.md."""
 
 from __future__ import annotations
 
@@ -38,6 +38,12 @@ def normalize_output(text: str) -> str:
 
 def extract_setup_command(plan_text: str) -> str | None:
     match = re.search(r"^- Setup command:\s*`([^`]+)`\s*$", plan_text, re.MULTILINE)
+    return match.group(1) if match else None
+
+
+def extract_automated_command(plan_text: str) -> str | None:
+    """Return the GUI test command, if the plan declares one."""
+    match = re.search(r"^- Automated command:\s*`([^`]+)`\s*$", plan_text, re.MULTILINE)
     return match.group(1) if match else None
 
 
@@ -113,11 +119,24 @@ def main() -> int:
 
     try:
         plan_text = PLAN_PATH.read_text(encoding="utf-8")
+        automated_command = extract_automated_command(plan_text)
         setup_command = extract_setup_command(plan_text)
-        cases = parse_cases(plan_text)
+        cases = [] if automated_command else parse_cases(plan_text)
     except ValueError as error:
         print(f"Could not parse {PLAN_PATH}: {error}", file=sys.stderr)
         return 2
+
+    if automated_command:
+        print("## Automated GUI tests")
+        print("$ " + automated_command)
+        result = run_command(automated_command)
+        if result.stdout:
+            print(result.stdout, end="" if result.stdout.endswith("\n") else "\n")
+        if result.returncode != 0:
+            print(f"GUI tests failed with exit code {result.returncode}", file=sys.stderr)
+            return result.returncode
+        print("Automated GUI tests passed.")
+        return 0
 
     if setup_command:
         print("## Setup")

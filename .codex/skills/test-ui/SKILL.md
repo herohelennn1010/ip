@@ -1,15 +1,26 @@
 ---
 name: test-ui
-description: Run console UI regression tests for this Java iP project from test/ui-test-plan.md, comparing each command's output with the expected output and stopping on the first failure.
+description: Run automated UI regression tests for this Java iP project from test/ui-test-plan.md.
 metadata:
   short-description: Run console UI tests
 ---
 
 # Test UI
 
-Use this project-specific skill when the user asks to run, create, update, or report console UI tests for the chatbot.
+Use this project-specific skill when the user asks to run, create, update, or report UI tests for the chatbot.
 
-The source of truth is `test/ui-test-plan.md`. Keep the test plan in that file and make each test case state:
+The source of truth is `test/ui-test-plan.md`.
+
+For the JavaFX GUI, declare one command in this form:
+
+```text
+- Automated command: `.\gradlew.bat test --tests sophon.ui.MainWindowTest`
+```
+
+The runner executes that command and reports its result. Keep each automated GUI case and each remaining manual visual
+case documented in the plan.
+
+For a console interface, make each test case state:
 
 - the aim of the test case
 - the command that launches the program
